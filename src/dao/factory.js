@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 let Partes, Maniobras;
 switch (config.PERSISTENCE) {
     case 'mongodb':
-        mongoose.connect(config.DB_URL)
+        mongoose.connect(config.DEVELOPMENT_DB_URL)
             .catch((error) => {
                 console.log("Cannot connect to database " + error);
                 process.exit();
