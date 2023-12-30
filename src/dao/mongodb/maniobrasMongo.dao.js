@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { maniobraModel } from '../model/maniobra.model.js'
-import { validateExistence } from './utils.mongodb.js';
+import utils from './utils.mongodb.js';
 
 export class ManiobrasMongoDAO {
     constructor() {}
@@ -19,7 +19,7 @@ export class ManiobrasMongoDAO {
     }
 
     async update(id, maniobra) {
-        const validate = await validateExistence(id, maniobraModel);
+        const validate = await utils.validateExistence(id, maniobraModel);
 
         if (validate.error)
             throw new Error(validate.msg);
