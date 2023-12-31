@@ -3,6 +3,6 @@ import partesController from '../controllers/partes.controller.js';
 
 export class PartesRouter extends Router {
     init() {
-        this.router.get('/', ["PUBLIC"], partesController.getPartes);
+        this.get('/', ["PUBLIC"], partesController.getPartes);
     }
 }
