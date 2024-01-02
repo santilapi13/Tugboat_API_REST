@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const maniobraCollection = "maniobra";
 const maniobraSchema = new mongoose.Schema({
-    // TODO: Definir el schema
+    title: { type: String, required: true, unique: true },
 });
 
 export const maniobraModel = mongoose.model(maniobraCollection, maniobraSchema);
