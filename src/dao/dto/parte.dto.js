@@ -1,8 +1,8 @@
-import { remolcadoresService } from "../../services/remolcador.service.js";
-import { buquesService } from "../../services/buque.service.js";
-import { maniobrasService } from "../../services/maniobra.service.js";
-import { solicitantesService } from "../../services/solicitante.service.js";
-import { banderasService } from "../../services/bandera.service.js";
+import { remolcadoresService } from "../../services/remolcadores.service.js";
+import { buquesService } from "../../services/buques.service.js";
+import { maniobrasService } from "../../services/maniobras.service.js";
+import { solicitantesService } from "../../services/solicitantes.service.js";
+import { banderasService } from "../../services/banderas.service.js";
 
 export default class ParteDTO {
     constructor(parte) {
