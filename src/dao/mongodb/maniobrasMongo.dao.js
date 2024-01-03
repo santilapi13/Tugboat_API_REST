@@ -26,4 +26,8 @@ export class ManiobrasMongoDAO {
 
         return await maniobraModel.findByIdAndUpdate(id, maniobra, { new: true });
     }
+
+    async updateByCode(cod_maniobra, maniobra) {
+        return await maniobraModel.findOneAndUpdate({ cod_maniobra }, maniobra, { new: true });
+    }
 }

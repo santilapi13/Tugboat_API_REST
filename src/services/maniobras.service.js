@@ -18,8 +18,12 @@ class ManiobrasService {
         return await this.dao.create(maniobra);
     }
 
-    async updateManiobra(id, maniobra) {
+    async updateManiobraById(id, maniobra) {
         return await this.dao.update(id, maniobra);
+    }
+
+    async updateManiobraByCode(cod_maniobra, maniobra) {
+        return await this.dao.updateByCode(cod_maniobra, maniobra);
     }
 }
 

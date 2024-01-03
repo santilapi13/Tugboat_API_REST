@@ -24,4 +24,8 @@ export class SolicitantesMongoDAO {
 
         return await solicitanteModel.findByIdAndUpdate(id, solicitante, { new: true });
     }
+
+    async updateByCode(cod_solicitante, solicitante) {
+        return await solicitanteModel.findOneAndUpdate({ cod_solicitante }, solicitante, { new: true });
+    }
 }

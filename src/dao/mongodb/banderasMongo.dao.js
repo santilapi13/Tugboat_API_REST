@@ -21,4 +21,8 @@ export class BanderasMongoDAO {
 
         return await banderaModel.findByIdAndUpdate(id, bandera, { new: true });
     }
+
+    async updateByCode(cod_bandera, bandera) {
+        return await banderaModel.findOneAndUpdate({ cod_bandera }, bandera, { new: true });
+    }
 }

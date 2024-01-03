@@ -25,4 +25,8 @@ export class TripulantesMongoDAO {
 
         return await tripulanteModel.findByIdAndUpdate(id, tripulante, { new: true });
     }
+
+    async updateByCode(cod_tripulante, tripulante) {
+        return await tripulanteModel.findOneAndUpdate({ cod_tripulante }, tripulante, { new: true });
+    }
 }

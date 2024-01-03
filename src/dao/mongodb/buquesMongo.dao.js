@@ -25,4 +25,8 @@ export class BuquesMongoDAO {
 
         return await buqueModel.findByIdAndUpdate(id, buque, { new: true });
     }
+
+    async updateByCode(cod_buque, buque) {
+        return await buqueModel.findOneAndUpdate({ cod_buque }, buque, { new: true });
+    }
 }

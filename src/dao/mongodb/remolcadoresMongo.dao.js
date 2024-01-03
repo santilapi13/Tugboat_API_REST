@@ -24,4 +24,8 @@ export class RemolcadoresMongoDAO {
 
         return await remolcadorModel.findByIdAndUpdate(id, remolcador, { new: true });
     }
+
+    async updateByCode(cod_remolcador, remolcador) {
+        return await remolcadorModel.findOneAndUpdate({ cod_remolcador }, remolcador, { new: true });
+    }
 }

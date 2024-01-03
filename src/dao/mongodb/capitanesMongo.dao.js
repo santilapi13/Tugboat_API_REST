@@ -24,4 +24,8 @@ export class CapitanesMongoDAO {
 
         return await capitanModel.findByIdAndUpdate(id, capitan, { new: true });
     }
+
+    async updateByCode(cod_capitan, capitan) {
+        return await capitanModel.findOneAndUpdate({ cod_capitan }, capitan, { new: true });
+    }
 }

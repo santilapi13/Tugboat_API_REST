@@ -22,13 +22,13 @@ const mongodbPersistence = async function() {
         Dias = Dias.DiasMongoDAO;
         Remolcadores = await import('./mongodb/remolcadoresMongo.dao.js');
         Remolcadores = Remolcadores.RemolcadoresMongoDAO;
-        Marineros = await import('./mongodb/marinerosMongo.dao.js');
-        Marineros = Marineros.MarinerosMongoDAO;
+        Tripulantes = await import('./mongodb/tripulantesMongo.dao.js');
+        Tripulantes = Tripulantes.TripulantesMongoDAO;
         Solicitantes = await import('./mongodb/solicitantesMongo.dao.js');
         Solicitantes = Solicitantes.SolicitantesMongoDAO;
 }
 
-let Partes, Maniobras, Buques, Banderas, Capitanes, Dias, Remolcadores, Marineros, Solicitantes;
+let Partes, Maniobras, Buques, Banderas, Capitanes, Dias, Remolcadores, Tripulantes, Solicitantes;
 switch (config.PERSISTENCE) {
     case 'mongodb':
         await mongodbPersistence();
@@ -37,4 +37,4 @@ switch (config.PERSISTENCE) {
         throw new Error("Invalid persistence type");
 }
 
-export { Partes, Maniobras };
+export { Partes, Maniobras, Buques, Banderas, Capitanes, Dias, Remolcadores, Tripulantes, Solicitantes };
