@@ -6,5 +6,9 @@ export class DiasRouter extends Router {
         this.get('/', ["CONTADOR", "SUPERVISOR", "CAPITAN", "ADMIN"], diasController.getDias);
         
         this.post('/', ["CAPITAN", "ADMIN"], diasController.postDia);
+
+        this.put('/', ["CAPITAN", "ADMIN"], diasController.putDia);
+
+        this.post('/newParte', ["CAPITAN", "ADMIN"], diasController.addParte);
     }
 }

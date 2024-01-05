@@ -1,4 +1,5 @@
 import { diasService } from '../services/dias.service.js';
+import DiaDTO from '../dao/dto/dia.dto.js';
 
 async function getDias(req, res) {
     try {
@@ -10,7 +11,27 @@ async function getDias(req, res) {
 }
 
 async function postDia(req, res) {
-    // TODO: Implementar la creacion de un dia.
+    const { fecha, tripulacion, feriado } = req.body;
+    let dia;
+    let result;
+
+    try {
+        dia = new DiaDTO({ fecha, tripulacion, feriado });
+        await dia.validateReferences();
+        result = await diasService.createDia(dia);
+    } catch (error) {
+        res.sendBadRequest(error.message);
+    }
+
+    res.sendCreated(result);
 }
 
-export default { getDias, postDia };
+async function putDia(req, res) {
+    // TODO: Implementar cambios en la tripulación o feriado de un día.
+}
+
+async function addParte(req, res) {
+    // TODO: Implementar agregado de un nuevo parte al día actual.
+}
+
+export default { getDias, postDia, putDia, addParte };

@@ -1,7 +1,10 @@
+import { tripulantesService } from '../../services/tripulantes.service.js';
+
 export default class DiaDTO {
     constructor(dia) {
-        if (!this.validateProps(dia))
-            throw new Error("Dia properties are not valid.");
+        const validation = this.validateProps(dia);
+        if (!validation.isValid)
+            throw new Error(validation.message);
 
         this.fecha = dia.fecha;
         this.partes = dia.partes;
@@ -15,19 +18,63 @@ export default class DiaDTO {
         let admitedCargos = ['Patrón', 'Maquinista', 'Engrasador', 'Marinero'];
         let tripulacionValidator = ['tripulante', 'cargo']; 
 
-        for (const toValidateProp of validator) {
-            if (!newDiaProps.includes(toValidateProp))
-                return false;
+        for (const toValidateProp of newDiaProps) {
+            if (!validator.includes(toValidateProp))
+                return {
+                    isValid: false,
+                    message: `Dia properties are not valid: ${toValidateProp} should not be in dia properties.`
+                };
         }
 
-        for (const toValidateProp of tripulacionValidator) {
-            if (!newDiaProps.includes(toValidateProp))
-                return false;
+        if (!(dia.fecha instanceof Date))
+            return {
+                isValid: false,
+                message: `Dia properties are not valid: Property fecha should be a Date.`
+            };
+
+        if (!Array.isArray(dia.tripulacion))
+            return {
+                isValid: false,
+                message: `Dia properties are not valid: Property tripulacion should be an Array.`
+            };
+
+        for (const tripulante of dia.tipulacion) {
+            let tripulanteProps = Objects.keys(tripulante);
+
+            for (const toValidateProp of tripulanteProps) {
+                if (!tripulacionValidator.includes(toValidateProp))
+                    return {
+                        isValid: false,
+                        message: `Dia properties are not valid: ${toValidateProp} should not be in dia.tripulacion properties.`
+                    };
+            }
+
+            if (!admitedCargos.includes(tripulante.cargo))
+                return {
+                    isValid: false,
+                    message: `Dia properties are not valid: Property cargo should be one of ${admitedCargos}.`
+                };
+
+            if (!(dia.feriado instanceof Boolean)) {
+                return {
+                    isValid: false,
+                    message: `Dia properties are not valid: Property feriado should be a Boolean.`
+                };
+            }
         }
 
-        if (!admitedCargos.includes(dia.tripulacion.cargo))
-            return false;
+        return { isValid: true };
+    }
 
-        return true;
+    validateReferences = async () => {
+        for (let i = 0; i < this.tripulacion.length; i++) {
+            try {
+                let existingTripulante = await tripulantesService.getTripulantes({ cod_tripulante: tripulacion[i].tripulante });
+                if (!existingTripulante) throw new Error("Tripulante not found.");
+                this.tripulacion[i] = existingTripulante._id;
+            } catch (error) {
+                throw new Error(`Dia properties are not valid: ${error.message}`);
+            }
+        }
     }
 }
