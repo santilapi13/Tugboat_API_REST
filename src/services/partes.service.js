@@ -14,12 +14,17 @@ class PartesService {
         return parte ? parte[0] : null;
     }
 
+    async getParteByCode(cod_parte) {
+        const parte = await this.dao.get({ cod_parte });
+        return parte ? parte[0] : null;
+    }
+
     async createParte(parte) {
         return await this.dao.create(parte);
     }
 
-    async updateParte(id, parte) {
-        return await this.dao.update(id, parte);
+    async updateParte(cod_parte, parte) {
+        return await this.dao.update(cod_parte, parte);
     }
 }
 

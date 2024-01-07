@@ -18,12 +18,10 @@ export class PartesMongoDAO {
         return await parteModel.create(parte);
     }
 
-    async update(id, parte) {
-        const validate = await utils.validateExistence(id, parteModel);
+    async update(cod_parte, newParte) {
+        const parte = await this.get({ cod_parte: cod_parte });
+        const id = parte[0]._id;
 
-        if (validate.error)
-            throw new Error(validate.msg);
-
-        return await parteModel.findByIdAndUpdate(id, parte, { new: true });
+        return await parteModel.findByIdAndUpdate(id, newParte, { new: true });
     }
 }
