@@ -31,7 +31,17 @@ const parteSchema = new mongoose.Schema({
     },
     observaciones: { type: String },
     practico: { type: String },
-    otra_embarcacion: { type: String }
+    otra_embarcacion: { type: String },
+    confirmado: { type: Boolean, default: false },
+    facturado: { type: Boolean, default: false },
+    cod_parte: { type: Number, required: true, unique: true },
+});
+
+parteSchema.pre('save', async function(next) {
+    let parte = this;
+    let lastParte = await parteModel.findOne({}, {}, { sort: { 'cod_parte': -1 } });
+    parte.cod_parte = lastParte ? lastParte.cod_parte + 1 : 1;
+    next();
 });
 
 parteSchema.pre('find', function() {
