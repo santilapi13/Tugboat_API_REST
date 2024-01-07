@@ -5,7 +5,7 @@ export class SolicitantesRouter extends Router {
     init() {
         this.get('/', ["CONTADOR", "SUPERVISOR", "CAPITAN", "ADMIN"], solicitantesController.getSolicitantes);
 
-        this.get('/:cod_buque', ["CONTADOR", "SUPERVISOR", "CAPITAN", "ADMIN"], solicitantesController.getSolicitanteByCode);
+        this.get('/:cod_solicitante', ["CONTADOR", "SUPERVISOR", "CAPITAN", "ADMIN"], solicitantesController.getSolicitanteByCode);
         
         this.post('/', ["ADMIN"], solicitantesController.postSolicitante);
     }

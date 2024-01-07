@@ -5,7 +5,7 @@ export class ManiobrasRouter extends Router {
     init() {
         this.get('/', ["CONTADOR", "SUPERVISOR", "CAPITAN", "ADMIN"], maniobrasController.getManiobras);
 
-        this.get('/:cod_buque', ["CONTADOR", "SUPERVISOR", "CAPITAN", "ADMIN"], maniobrasController.getManiobraByCode);
+        this.get('/:cod_maniobra', ["CONTADOR", "SUPERVISOR", "CAPITAN", "ADMIN"], maniobrasController.getManiobraByCode);
         
         this.post('/', ["ADMIN"], maniobrasController.postManiobra);
     }

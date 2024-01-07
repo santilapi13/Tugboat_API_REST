@@ -7,6 +7,6 @@ export class BanderasRouter extends Router {
 
         this.get('/:cod_bandera', ["CONTADOR", "SUPERVISOR", "CAPITAN", "ADMIN"], banderasController.getBanderaByCode);
         
-        this.post('/', ["ADMIN"], banderasController.postBandera);
+        this.post('/', ["ADMIN"], banderasController.postBanderas);
     }
 }
