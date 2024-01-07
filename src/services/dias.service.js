@@ -17,6 +17,10 @@ class DiasService {
         return await this.dao.update(id, dia);
     }
 
+    async addParteToDia(fecha, cod_parte) {
+        return await this.dao.addParte(fecha, cod_parte);
+    }
+
 }
 
 export const diasService = new DiasService(DAO);

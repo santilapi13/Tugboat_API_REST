@@ -30,8 +30,4 @@ async function putDia(req, res) {
     // TODO: Implementar cambios en la tripulación o feriado de un día.
 }
 
-async function addParte(req, res) {
-    // TODO: Implementar agregado de un nuevo parte al día actual.
-}
-
-export default { getDias, postDia, putDia, addParte };
+export default { getDias, postDia, putDia };
