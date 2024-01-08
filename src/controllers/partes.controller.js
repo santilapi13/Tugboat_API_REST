@@ -6,15 +6,15 @@ import { diasService } from '../services/dias.service.js';
 import ParteDTO from '../dao/dto/parte.dto.js';
 
 function validateQueryParams(remolcador, buque, solicitante, confirmado, facturado) {
-    remolcador = remolcadoresService.getRemolcador({ cod_remolcador: remolcador });
+    remolcador = remolcadoresService.getRemolcadores({ cod_remolcador: remolcador });
     if (!remolcador) throw new Error("Remolcador not found.");
     remolcador = remolcador._id;
 
-    buque = buquesService.getBuque({ cod_buque: buque });
+    buque = buquesService.getBuques({ cod_buque: buque });
     if (!buque) throw new Error("Buque not found.");
     buque = buque._id;
 
-    solicitante = solicitantesService.getSolicitante({ cod_solicitante: solicitante });
+    solicitante = solicitantesService.getSolicitantes({ cod_solicitante: solicitante });
     if (!solicitante) throw new Error("Solicitante not found.");
     solicitante = solicitante._id;
 
