@@ -18,12 +18,8 @@ export class DiasMongoDAO {
         return await diaModel.create(dia);
     }
 
-    async update(id, dia) {
-        const validate = await utils.validateExistence(id, diaModel);
-
-        if (validate.error) throw new Error(validate.msg);
-
-        return await diaModel.findByIdAndUpdate(id, dia, { new: true });
+    async update(dia) {
+        return await diaModel.updateOne({ fecha: dia.fecha }, { tripulacion: dia.tripulacion, feriado: dia.feriado });
     }
 
     async addParte(fecha, cod_parte) {

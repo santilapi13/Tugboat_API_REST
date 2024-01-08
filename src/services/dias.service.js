@@ -14,12 +14,12 @@ class DiasService {
         return await this.dao.create(dia);
     }
 
-    async updateDiaById(id, dia) {
-        return await this.dao.update(id, dia);
-    }
-
     async addParteToDia(fecha, cod_parte) {
         return await this.dao.addParte(fecha, cod_parte);
+    }
+
+    async updateDia(dia) {
+        return await this.dao.update(dia);
     }
 
 }
