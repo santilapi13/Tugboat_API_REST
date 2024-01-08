@@ -5,8 +5,9 @@ class PartesService {
         this.dao = new dao();
     }
 
-    async getPartes(filter = {}) {
-        return await this.dao.get(filter);
+    async getPartes(query = {}, sort = { hora_inicio: 'desc' }, limit = 0) {
+        const filters = { sort, limit };
+        return await this.dao.get(query, filters);
     }
 
     async getParteById(id) {

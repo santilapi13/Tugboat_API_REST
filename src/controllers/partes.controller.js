@@ -1,14 +1,50 @@
 import { partesService } from '../services/partes.service.js';
+import { remolcadoresService } from '../services/remolcadores.service.js';
+import { buquesService } from '../services/buques.service.js';
+import { solicitantesService } from '../services/solicitantes.service.js';
 import { diasService } from '../services/dias.service.js';
 import ParteDTO from '../dao/dto/parte.dto.js';
 
+function validateQueryParams(remolcador, buque, solicitante, confirmado, facturado) {
+    remolcador = remolcadoresService.getRemolcador({ cod_remolcador: remolcador });
+    if (!remolcador) throw new Error("Remolcador not found.");
+    remolcador = remolcador._id;
+
+    buque = buquesService.getBuque({ cod_buque: buque });
+    if (!buque) throw new Error("Buque not found.");
+    buque = buque._id;
+
+    solicitante = solicitantesService.getSolicitante({ cod_solicitante: solicitante });
+    if (!solicitante) throw new Error("Solicitante not found.");
+    solicitante = solicitante._id;
+
+    if (confirmado !== undefined && !confirmado.match(/^(true|false)$/))
+        throw new Error("Invalid confirmado value.");
+    if (facturado !== undefined && !facturado.match(/^(true|false)$/))
+        throw new Error("Invalid facturado value.");
+
+    return { remolcador, buque, solicitante };
+}
+
 async function getPartes(req, res) {
+    let { remolcador, buque, solicitante, confirmado, facturado } = req.query;
+
     try {
-        const partes = await partesService.getPartes();
-        return res.sendOk(partes);
+        const validatedParams = validateQueryParams(remolcador, buque, solicitante, confirmado, facturado);
+        remolcador = validatedParams.remolcador;
+        buque = validatedParams.buque;
+        solicitante = validatedParams.solicitante;
+    } catch (error) {
+        return res.sendBadRequestError(error.message);
+    }
+
+    try {
+        const partes = await partesService.getPartes({ remolcador, buque, solicitante, confirmado, facturado });
     } catch (error) {
         return res.sendInternalServerError(error.message);
     }
+
+    res.sendOk(partes);
 }
 
 async function postParte(req, res) {
