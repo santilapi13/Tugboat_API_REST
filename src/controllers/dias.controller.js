@@ -10,6 +10,20 @@ async function getDias(req, res) {
     }
 }
 
+async function getDiaByFecha(req, res) {
+    const { fecha } = req.params;
+
+    if (!fecha || !(fecha instanceof Date))
+        res.sendBadRequest('Fecha inválida.');
+
+    try {
+        const dias = await diasService.getDias({ fecha });
+        res.sendOk(dias[0]);
+    } catch (error) {
+        res.sendBadRequest(error.message);
+    }
+}
+
 async function postDia(req, res) {
     const { fecha, tripulacion, feriado } = req.body;
     let dia;
@@ -30,4 +44,4 @@ async function putDia(req, res) {
     // TODO: Implementar cambios en la tripulación o feriado de un día.
 }
 
-export default { getDias, postDia, putDia };
+export default { getDias, getDiaByFecha, postDia, putDia };
