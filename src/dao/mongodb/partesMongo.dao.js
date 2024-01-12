@@ -24,4 +24,11 @@ export class PartesMongoDAO {
 
         return await parteModel.findByIdAndUpdate(id, newParte, { new: true });
     }
+
+    async delete(cod_parte) {
+        const parte = await this.get({ cod_parte: cod_parte });
+        const id = parte[0]._id;
+
+        return await parteModel.findByIdAndDelete(id);
+    }
 }

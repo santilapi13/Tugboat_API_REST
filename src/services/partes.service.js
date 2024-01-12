@@ -27,6 +27,10 @@ class PartesService {
     async updateParte(cod_parte, parte) {
         return await this.dao.update(cod_parte, parte);
     }
+
+    async deleteParte(cod_parte) {
+        return await this.dao.delete(cod_parte);
+    }
 }
 
 export const partesService = new PartesService(DAO);

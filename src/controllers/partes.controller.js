@@ -47,6 +47,23 @@ async function getPartes(req, res) {
     res.sendOk(partes);
 }
 
+async function parteCreationTransaction(dia, parte) {
+    try {
+        result = await partesService.createParte(parte);
+    } catch (error) {
+        throw new Error("Cannot create parte: " + error.message);
+    }
+    
+    try {
+        await diasService.addParteToDia(dia, result.cod_parte);
+    } catch (error) {
+        await partesService.deleteParte(result.cod_parte);
+        throw new Error("Cannot add parte to dia: " + error.message);
+    }
+    
+    return result;
+}
+
 async function postParte(req, res) {
     let { remolcador, buque, maniobra, hora_inicio, hora_fin, solicitante, bandera, observaciones, practico, otra_embarcacion } = req.body;
     let parte;
@@ -66,10 +83,8 @@ async function postParte(req, res) {
         if (dia.fecha.getDay() !== hora_inicio.getDay() ||  dia.fecha.getMonth() !== hora_inicio.getMonth() || dia.fecha.getFullYear() !== hora_inicio.getFullYear())
             throw new Error("Cannot create a parte for a dia that doesn't exist.");
 
-        result = await partesService.createParte(parte);
-        await diasService.addParteToDia(dia, result.cod_parte);
+        result = await parteCreationTransaction(dia, parte);
     } catch (error) {
-        // TODO: Implementar función de rollback en caso de error ya que hay 2 operaciones que deben ser atómicas.
         return res.sendInternalServerError(error.message);
     }
 
