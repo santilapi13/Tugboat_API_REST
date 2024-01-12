@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { diaModel } from "../model/dia.model.js";
-import { partesService } from "../../services/partes.service.js";
+import { parteModel } from "../model/parte.model.js";
 import utils from "./utils.mongodb.js";
 
 export class DiasMongoDAO {
@@ -26,7 +26,7 @@ export class DiasMongoDAO {
         const dia = await diaModel.findOne({ fecha: fecha });
         if (!dia) throw new Error("Dia not found.");
 
-        const parte = await partesService.getParteByCode(cod_parte);
+        const parte = await parteModel.findOne({ cod_parte: cod_parte });
         if (!parte) throw new Error("Parte not found.");
 
         return await diaModel.findByIdAndUpdate(dia._id, { $push: { partes: parte._id } }, { new: true });

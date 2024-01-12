@@ -156,5 +156,4 @@ async function facturarParte(req, res) {
 
     res.sendOk(parte);
 }
-
 export default { getPartes, postParte, putParte, confirmarParte, facturarParte };

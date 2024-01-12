@@ -18,7 +18,7 @@ export default class Router {
                 await callback.apply(this, params);
             } catch (error) {
                 console.log(error);
-                params[1].status(500).json({ message: 'Internal server error', error });
+                params[1].status(500).send({ message: 'Internal server error', error });
             }
         });
     }
