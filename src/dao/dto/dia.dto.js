@@ -13,7 +13,7 @@ export default class DiaDTO {
     }
 
     validateProps = (dia) => {
-        let newDiaProps = Objects.keys(dia);
+        let newDiaProps = Object.keys(dia);
         let validator = ['fecha', 'partes', 'tripulacion', 'cargo', 'feriado'];
         let admitedCargos = ['Patrón', 'Maquinista', 'Engrasador', 'Marinero'];
         let tripulacionValidator = ['tripulante', 'cargo']; 
@@ -39,7 +39,7 @@ export default class DiaDTO {
             };
 
         for (const tripulante of dia.tipulacion) {
-            let tripulanteProps = Objects.keys(tripulante);
+            let tripulanteProps = Object.keys(tripulante);
 
             for (const toValidateProp of tripulanteProps) {
                 if (!tripulacionValidator.includes(toValidateProp))

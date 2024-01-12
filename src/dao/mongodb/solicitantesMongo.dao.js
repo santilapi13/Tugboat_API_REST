@@ -14,6 +14,8 @@ export class SolicitantesMongoDAO {
     }
 
     async create(solicitante) {
+        let lastSolicitante = await solicitanteModel.findOne({}, {}, { sort: { 'cod_solicitante': -1 } });
+        solicitante.cod_solicitante = lastSolicitante ? parseInt(lastSolicitante.cod_solicitante) + 1 : 1;
         return await solicitanteModel.create(solicitante);
     }
 

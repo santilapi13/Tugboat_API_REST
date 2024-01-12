@@ -14,6 +14,8 @@ export class BuquesMongoDAO {
     }
 
     async create(buque) {
+        let lastBuque = await buqueModel.findOne({}, {}, { sort: { 'cod_buque': -1 } });
+        buque.cod_buque = lastBuque ? parseInt(lastBuque.cod_buque) + 1 : 1;
         return await buqueModel.create(buque);
     }
 

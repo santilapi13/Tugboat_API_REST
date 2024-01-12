@@ -15,6 +15,8 @@ export class ManiobrasMongoDAO {
     }
 
     async create(maniobra) {
+        let lastManiobra = await maniobraModel.findOne({}, {}, { sort: { 'cod_maniobra': -1 } });
+        maniobra.cod_maniobra = lastManiobra ? parseInt(lastManiobra.cod_maniobra) + 1 : 1;
         return await maniobraModel.create(maniobra);
     }
 

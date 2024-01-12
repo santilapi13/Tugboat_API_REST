@@ -5,7 +5,7 @@ async function getTripulantes(req, res) {
         const tripulantes = await tripulantesService.getTripulantes();
         res.sendOk(tripulantes);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        res.sendBadRequestError(error.message);
     }
 }
 
@@ -16,7 +16,7 @@ async function getTripulanteByCode(req, res) {
         const tripulante = await tripulantesService.getTripulantes({ cod_buque });
         res.sendOk(tripulante);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        res.sendBadRequestError(error.message);
     }
 }
 
@@ -27,7 +27,7 @@ async function postTripulante(req, res) {
         const tripulante = await tripulantesService.createTripulante({ first_name, last_name });
         res.sendCreated(tripulante);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        res.sendBadRequestError(error.message);
     }
 }
 

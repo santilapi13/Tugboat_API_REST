@@ -15,6 +15,8 @@ export class PartesMongoDAO {
     }
 
     async create(parte) {
+        let lastParte = await parteModel.findOne({}, {}, { sort: { 'cod_parte': -1 } });
+        parte.cod_parte = lastParte ? parseInt(lastParte.cod_parte) + 1 : 1;
         return await parteModel.create(parte);
     }
 

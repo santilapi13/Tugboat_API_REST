@@ -22,7 +22,7 @@ export default class ParteDTO {
     }
 
     validatePropertiesKeys = (parte) => {
-        let newParteProps = Objects.keys(parte);
+        let newParteProps = Object.keys(parte);
         let validator = ['remolcador', 'buque', 'maniobra', 'hora_inicio', 'hora_fin', 'solicitante', 'bandera'];
         
         for (const toValidateProp of validator) {

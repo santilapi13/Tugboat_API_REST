@@ -14,6 +14,8 @@ export class RemolcadoresMongoDAO {
     }
 
     async create(remolcador) {
+        let lastRemolcador = await remolcadorModel.findOne({}, {}, { sort: { 'cod_remolcador': -1 } });
+        remolcador.cod_remolcador = lastRemolcador ? parseInt(lastRemolcador.cod_remolcador) + 1 : 1;
         return await remolcadorModel.create(remolcador);
     }
 

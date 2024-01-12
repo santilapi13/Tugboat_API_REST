@@ -38,8 +38,9 @@ async function getPartes(req, res) {
         return res.sendBadRequestError(error.message);
     }
 
+    let partes;
     try {
-        const partes = await partesService.getPartes({ remolcador, buque, solicitante, confirmado, facturado });
+        partes = await partesService.getPartes({ remolcador, buque, solicitante, confirmado, facturado });
     } catch (error) {
         return res.sendInternalServerError(error.message);
     }

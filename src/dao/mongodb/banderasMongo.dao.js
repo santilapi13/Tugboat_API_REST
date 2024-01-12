@@ -10,6 +10,8 @@ export class BanderasMongoDAO {
     }
 
     async create(bandera) {
+        let lastBandera = await banderaModel.findOne({}, {}, { sort: { 'cod_bandera': -1 } });
+        bandera.cod_bandera = lastBandera ? parseInt(lastBandera.cod_bandera) + 1 : 1;
         return await banderaModel.create(bandera);
     }
 

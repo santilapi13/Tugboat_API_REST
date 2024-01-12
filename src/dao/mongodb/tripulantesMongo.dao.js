@@ -9,11 +9,13 @@ export class TripulantesMongoDAO {
         if (filter['_id'] && !mongoose.Types.ObjectId.isValid(filter['_id']))
             throw new Error('Invalid id');
 
-        let result = await marineroModel.find(filter);
+        let result = await tripulanteModel.find(filter);
         return result;
     }
 
     async create(tripulante) {
+        let lastTripulante = await tripulanteModel.findOne({}, {}, { sort: { 'cod_tripulante': -1 } });
+        tripulante.cod_tripulante = lastTripulante ? parseInt(lastTripulante.cod_tripulante) + 1 : 1;
         return await tripulanteModel.create(tripulante);
     }
 

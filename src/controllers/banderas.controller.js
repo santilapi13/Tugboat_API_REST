@@ -5,7 +5,7 @@ async function getBanderas(req, res) {
         const banderas = await banderasService.getBanderas();
         res.sendOk(banderas);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        res.sendBadRequestError(error.message);
     }
 }
 
@@ -16,7 +16,7 @@ async function getBanderaByCode(req, res) {
         const bandera = await banderasService.getBanderas({ cod_bandera });
         res.sendOk(bandera);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        res.sendBadRequestError(error.message);
     }
 }
 
@@ -27,7 +27,7 @@ async function postBanderas(req, res) {
         const bandera = await banderasService.createBandera({ title });
         res.sendCreated(bandera);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        res.sendBadRequestError(error.message);
     }
 }
 

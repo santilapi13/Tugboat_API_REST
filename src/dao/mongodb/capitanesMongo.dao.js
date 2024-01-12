@@ -14,6 +14,8 @@ export class CapitanesMongoDAO {
     }
 
     async create(capitan) {
+        let lastCapitan = await capitanModel.findOne({}, {}, { sort: { 'cod_capitan': -1 } });
+        capitan.cod_capitan = lastCapitan ? parseInt(lastCapitan.cod_capitan) + 1 : 1;
         return await capitanModel.create(capitan);
     }
 
