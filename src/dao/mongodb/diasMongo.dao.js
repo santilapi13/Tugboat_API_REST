@@ -6,11 +6,11 @@ import utils from "./utils.mongodb.js";
 export class DiasMongoDAO {
     constructor() {}
 
-    async get(query = {}, filters = {}) {
+    async get(query = {}, { limit, sort }) {
         if (query["_id"] && !mongoose.Types.ObjectId.isValid(query["_id"]))
             throw new Error("Invalid id");
 
-        let result = await diaModel.find(query, filters);
+        let result = await diaModel.find(query).limit(limit).sort(sort);
         return result;
     }
 

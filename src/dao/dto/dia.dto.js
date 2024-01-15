@@ -1,4 +1,5 @@
 import { tripulantesService } from '../../services/tripulantes.service.js';
+import { diasService } from '../../services/dias.service.js';
 
 export default class DiaDTO {
     constructor(dia) {
@@ -6,7 +7,7 @@ export default class DiaDTO {
         if (!validation.isValid)
             throw new Error(validation.message);
 
-        this.fecha = dia.fecha;
+        this.fecha = new Date(dia.fecha);
         this.partes = dia.partes;
         this.tripulacion = dia.tripulacion;
         this.feriado = dia.feriado;
@@ -26,11 +27,13 @@ export default class DiaDTO {
                 };
         }
 
-        if (!(dia.fecha instanceof Date))
+        const fechaDate = new Date(dia.fecha);
+        if (!(fechaDate instanceof Date)) {
             return {
                 isValid: false,
                 message: `Dia properties are not valid: Property fecha should be a Date.`
             };
+        }
 
         if (!Array.isArray(dia.tripulacion))
             return {
@@ -38,7 +41,7 @@ export default class DiaDTO {
                 message: `Dia properties are not valid: Property tripulacion should be an Array.`
             };
 
-        for (const tripulante of dia.tipulacion) {
+        for (const tripulante of dia.tripulacion) {
             let tripulanteProps = Object.keys(tripulante);
 
             for (const toValidateProp of tripulanteProps) {
@@ -76,5 +79,10 @@ export default class DiaDTO {
                 throw new Error(`Dia properties are not valid: ${error.message}`);
             }
         }
+
+        let dias = await diasService.getDias({}, 1);
+        let lastDia = dias[0];
+        if (lastDia && lastDia.fecha.getDay() === this.fecha.getDay() && lastDia.fecha.getMonth() === this.fecha.getMonth() && lastDia.fecha.getFullYear() === this.fecha.getFullYear())
+            throw new Error(`Dia properties are not valid: Dia with fecha ${this.fecha} already exists.`);
     }
 }

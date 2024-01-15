@@ -33,13 +33,13 @@ async function postDia(req, res) {
         dia = new DiaDTO({ fecha, tripulacion, feriado });   // TODO: Error: fecha should be a Date
         await dia.validateReferences();
     } catch (error) {
-        res.sendBadRequestError(error.message);
+        return res.sendBadRequestError(error.message);
     }
 
     try {
         result = await diasService.createDia(dia);
     } catch (error) {
-        res.sendInternalServerError(error.message);
+        return res.sendInternalServerError(error.message);
     }
 
     res.sendCreated(result);

@@ -5,7 +5,7 @@ class DiasService {
         this.dao = new dao();
     }
 
-    async getDias(query = {}, sort = { fecha: 'desc' }, limit = 7) {
+    async getDias(query = {}, limit = 7, sort = { fecha: 'desc' }) {
         const filters = { limit, sort };
         return await this.dao.get(query, filters);
     }

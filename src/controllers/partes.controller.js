@@ -78,6 +78,7 @@ async function postParte(req, res) {
     }
 
     try {
+        // TODO: Que no sea el último día cargado, sino hacer un get del día que corresponda a la fecha de inicio del parte.
         let dia = await diasService.getDias({ sort: { fecha: 'desc' } });
         dia = dia[0];
 
@@ -91,6 +92,8 @@ async function postParte(req, res) {
 
     res.sendCreated(result);
 }
+
+// TODO: postPartes que reciba un array de partes pendientes
 
 async function putParte(req, res) {
     const { cod_parte } = req.params;
