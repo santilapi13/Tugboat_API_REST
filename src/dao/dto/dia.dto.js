@@ -73,12 +73,14 @@ export default class DiaDTO {
         for (let i = 0; i < this.tripulacion.length; i++) {
             try {
                 let existingTripulante = await tripulantesService.getTripulantes({ cod_tripulante: this.tripulacion[i].tripulante });
-                if (!existingTripulante) throw new Error("Tripulante not found.");
+                if (!existingTripulante[0]) throw new Error(`cod_tripulante ${this.tripulacion[i].tripulante} not found.`);
             } catch (error) {
                 throw new Error(`Dia properties are not valid: ${error}`);
             }
         }
+    }
 
+    validateUnique = async () => {
         let dias = await diasService.getDias({}, 1);
         let lastDia = dias[0];
         if (lastDia && lastDia.fecha.getDay() === this.fecha.getDay() && lastDia.fecha.getMonth() === this.fecha.getMonth() && lastDia.fecha.getFullYear() === this.fecha.getFullYear())

@@ -30,7 +30,14 @@ export class DiasMongoDAO {
     }
 
     async update(dia) {
-        return await diaModel.updateOne({ fecha: dia.fecha }, { tripulacion: dia.tripulacion, feriado: dia.feriado });
+        let oldDia = await this.getByFecha(dia);
+        for (const tripulante of dia.tripulacion) {
+            let fullTripulante = await tripulanteModel.find({ cod_tripulante: tripulante.tripulante });
+            fullTripulante = fullTripulante[0];
+
+            tripulante.tripulante = fullTripulante._id;
+        }
+        return await diaModel.findByIdAndUpdate({ _id: oldDia._id }, { tripulacion: dia.tripulacion, feriado: dia.feriado }, { new: true });
     }
 
     async addParte(fecha, cod_parte) {
