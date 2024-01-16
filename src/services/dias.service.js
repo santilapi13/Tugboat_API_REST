@@ -10,6 +10,10 @@ class DiasService {
         return await this.dao.get(query, filters);
     }
 
+    async getDiaByFecha(fecha) {
+        return await this.dao.getByFecha({ fecha });
+    }
+
     async createDia(dia) {
         return await this.dao.create(dia);
     }

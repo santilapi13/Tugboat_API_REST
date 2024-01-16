@@ -19,6 +19,13 @@ export default class DiaDTO {
         let admitedCargos = ['Patrón', 'Maquinista', 'Engrasador', 'Marinero'];
         let tripulacionValidator = ['tripulante', 'cargo']; 
 
+        if (!(typeof dia.feriado === 'boolean')) {
+            return {
+                isValid: false,
+                message: `Dia properties are not valid: Property feriado should be a Boolean.`
+            };
+        }
+
         for (const toValidateProp of newDiaProps) {
             if (!validator.includes(toValidateProp))
                 return {
@@ -40,7 +47,7 @@ export default class DiaDTO {
                 isValid: false,
                 message: `Dia properties are not valid: Property tripulacion should be an Array.`
             };
-
+        
         for (const tripulante of dia.tripulacion) {
             let tripulanteProps = Object.keys(tripulante);
 
@@ -57,13 +64,6 @@ export default class DiaDTO {
                     isValid: false,
                     message: `Dia properties are not valid: Property cargo should be one of ${admitedCargos}.`
                 };
-
-            if (!(dia.feriado instanceof Boolean)) {
-                return {
-                    isValid: false,
-                    message: `Dia properties are not valid: Property feriado should be a Boolean.`
-                };
-            }
         }
 
         return { isValid: true };
@@ -72,11 +72,10 @@ export default class DiaDTO {
     validateReferences = async () => {
         for (let i = 0; i < this.tripulacion.length; i++) {
             try {
-                let existingTripulante = await tripulantesService.getTripulantes({ cod_tripulante: tripulacion[i].tripulante });
+                let existingTripulante = await tripulantesService.getTripulantes({ cod_tripulante: this.tripulacion[i].tripulante });
                 if (!existingTripulante) throw new Error("Tripulante not found.");
-                this.tripulacion[i] = existingTripulante._id;
             } catch (error) {
-                throw new Error(`Dia properties are not valid: ${error.message}`);
+                throw new Error(`Dia properties are not valid: ${error}`);
             }
         }
 

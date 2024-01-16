@@ -79,10 +79,9 @@ async function postParte(req, res) {
 
     try {
         // TODO: Que no sea el último día cargado, sino hacer un get del día que corresponda a la fecha de inicio del parte.
-        let dia = await diasService.getDias({ sort: { fecha: 'desc' } });
-        dia = dia[0];
+        let dia = await diasService.getDiaByFecha(hora_inicio);
 
-        if (dia.fecha.getDay() !== hora_inicio.getDay() ||  dia.fecha.getMonth() !== hora_inicio.getMonth() || dia.fecha.getFullYear() !== hora_inicio.getFullYear())
+        if (!dia)
             throw new Error("Cannot create a parte for a dia that doesn't exist.");
 
         result = await parteCreationTransaction(dia, parte);

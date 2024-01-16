@@ -23,12 +23,27 @@ const diaSchema = new mongoose.Schema({
 
 diaSchema.pre('find', function() {
     this.populate('partes');
-    this.populate('tripulacion');
+    this.populate({
+        path: 'tripulacion.tripulante'
+    })
 });
 
 diaSchema.pre('findOne', function() {
     this.populate('partes');
-    this.populate('tripulacion');
+    this.populate({
+        path: 'tripulacion.tripulante'
+    })
 });
+
+diaSchema.index({ fecha: 1 });
+
+diaSchema.statics.findByFecha = function (year, month, day) {
+    const startOfDay = new Date(year, month, day);
+    const endOfDay = new Date(year, month, day + 1);
+
+    return this.findOne({
+        fecha: { $gte: startOfDay, $lt: endOfDay }
+    });
+};
 
 export const diaModel = mongoose.model(diaCollection, diaSchema);

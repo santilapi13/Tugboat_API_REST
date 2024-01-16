@@ -42,6 +42,9 @@ app.use('/api/solicitantes', solicitantesRouter.getRouter());
 app.use('/api/tripulantes', tripulantesRouter.getRouter());
 
 mongoose.connect(config.DEVELOPMENT_DB_URL)
+    .then(() => {
+        console.log("Connected to database");
+    })
     .catch((error) => {
         console.log("Cannot connect to database " + error);
         process.exit();

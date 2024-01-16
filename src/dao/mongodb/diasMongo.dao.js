@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { diaModel } from "../model/dia.model.js";
 import { parteModel } from "../model/parte.model.js";
-import utils from "./utils.mongodb.js";
+import { tripulanteModel } from "../model/tripulante.model.js";
 
 export class DiasMongoDAO {
     constructor() {}
@@ -14,7 +14,18 @@ export class DiasMongoDAO {
         return result;
     }
 
+    async getByFecha({ fecha }) {
+        let result = await diaModel.findByFecha(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+        return result;
+    }
+
     async create(dia) {
+        for (const tripulante of dia.tripulacion) {
+            let fullTripulante = await tripulanteModel.find({ cod_tripulante: tripulante.tripulante });
+            fullTripulante = fullTripulante[0];
+
+            tripulante.tripulante = fullTripulante._id;
+        }
         return await diaModel.create(dia);
     }
 

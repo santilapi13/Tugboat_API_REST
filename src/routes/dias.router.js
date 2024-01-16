@@ -1,5 +1,6 @@
 import Router from './router.js';
 import diasController from '../controllers/dias.controller.js';
+import { diasService } from '../services/dias.service.js';
 
 export class DiasRouter extends Router {
     init() {
