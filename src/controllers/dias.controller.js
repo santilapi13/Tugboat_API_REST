@@ -30,7 +30,7 @@ async function postDia(req, res) {
     let result;
 
     try {
-        dia = new DiaDTO({ fecha, tripulacion, feriado });   // TODO: Error: fecha should be a Date
+        dia = new DiaDTO({ fecha, tripulacion, feriado });
         await dia.validateReferences();
     } catch (error) {
         return res.sendBadRequestError(error.message);
