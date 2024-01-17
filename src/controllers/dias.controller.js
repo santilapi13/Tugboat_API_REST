@@ -2,25 +2,17 @@ import { diasService } from '../services/dias.service.js';
 import DiaDTO from '../dao/dto/dia.dto.js';
 
 async function getDias(req, res) {
+    let { fecha, cod_remolcador, limit } = req.query;
+    let dias;
+
+    if (fecha)
+        fecha = new Date(fecha);
+
+    const query = { fecha, remolcador: cod_remolcador };
+
     try {
-        const dias = await diasService.getDias();
+        dias = await diasService.getDias(query, limit);
         res.sendOk(dias);
-    } catch (error) {
-        res.sendBadRequestError(error.message);
-    }
-}
-
-async function getDiaByFecha(req, res) {
-    let { fecha } = req.params;
-
-    if (!fecha)
-        return res.sendBadRequestError('Fecha is missing');
-
-    fecha = new Date(fecha);
-
-    try {
-        const dia = await diasService.getDiaByFecha(fecha);
-        res.sendOk(dia);
     } catch (error) {
         res.sendBadRequestError(error.message);
     }
@@ -81,4 +73,4 @@ async function putDia(req, res) {
     res.sendOk(result);
 }
 
-export default { getDias, getDiaByFecha, postDia, putDia };
+export default { getDias, postDia, putDia };

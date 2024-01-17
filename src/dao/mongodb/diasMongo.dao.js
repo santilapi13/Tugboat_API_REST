@@ -2,20 +2,25 @@ import mongoose from "mongoose";
 import { diaModel } from "../model/dia.model.js";
 import { parteModel } from "../model/parte.model.js";
 import { tripulanteModel } from "../model/tripulante.model.js";
+import { remolcadorModel } from "../model/remolcador.model.js";
 
 export class DiasMongoDAO {
     constructor() {}
 
     async get(query = {}, { limit, sort }) {
-        if (query["_id"] && !mongoose.Types.ObjectId.isValid(query["_id"]))
-            throw new Error("Invalid id");
+        let result;
 
-        let result = await diaModel.find(query).limit(limit).sort(sort);
-        return result;
-    }
+        if (query.remolcador) {
+            const remolcador = await remolcadorModel.find({ cod_remolcador: query.remolcador });
+            query.remolcador = remolcador[0]._id;
+        }
 
-    async getByFecha({ fecha }) {
-        let result = await diaModel.findByFecha(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+        if (!query.fecha) {
+            result = await diaModel.find(query).limit(limit).sort(sort);
+        } else {
+            result = await diaModel.findByFecha(query.fecha.getFullYear(), query.fecha.getMonth(), query.fecha.getDate(), query.remolcador);
+        }
+
         return result;
     }
 

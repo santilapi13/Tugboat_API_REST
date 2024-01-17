@@ -7,11 +7,11 @@ class DiasService {
 
     async getDias(query = {}, limit = 7, sort = { fecha: 'desc' }) {
         const filters = { limit, sort };
-        return await this.dao.get(query, filters);
-    }
 
-    async getDiaByFecha(fecha) {
-        return await this.dao.getByFecha({ fecha });
+        if (!query.fecha) delete query.fecha;
+        if (!query.remolcador) delete query.remolcador;
+
+        return await this.dao.get(query, filters);
     }
 
     async createDia(dia) {

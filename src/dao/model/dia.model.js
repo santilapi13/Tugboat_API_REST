@@ -44,13 +44,13 @@ diaSchema.pre('findOne', function() {
 
 diaSchema.index({ fecha: 1 });
 
-diaSchema.statics.findByFecha = function (year, month, day) {
+diaSchema.statics.findByFecha = function (year, month, day, remolcador) {
     const startOfDay = new Date(year, month, day);
     const endOfDay = new Date(year, month, day + 1);
 
-    return this.findOne({
-        fecha: { $gte: startOfDay, $lt: endOfDay }
-    });
+    const query = { fecha: { $gte: startOfDay, $lt: endOfDay }, remolcador: remolcador };
+
+    return this.findOne(query);
 };
 
 export const diaModel = mongoose.model(diaCollection, diaSchema);
