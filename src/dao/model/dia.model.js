@@ -2,7 +2,12 @@ import mongoose from "mongoose";
 
 const diaCollection = "dia";
 const diaSchema = new mongoose.Schema({
-    fecha: { type: Date, required: true, unique: true },
+    fecha: { type: Date, required: true },
+    remolcador: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "remolcador",
+        required: true
+    },
     partes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "parte",
@@ -23,13 +28,15 @@ const diaSchema = new mongoose.Schema({
 
 diaSchema.pre('find', function() {
     this.populate('partes');
+    this.populate('remolcador');
     this.populate({
         path: 'tripulacion.tripulante'
-    })
+    });
 });
 
 diaSchema.pre('findOne', function() {
     this.populate('partes');
+    this.populate('remolcador');
     this.populate({
         path: 'tripulacion.tripulante'
     })
