@@ -1,5 +1,6 @@
 import { tripulantesService } from '../../services/tripulantes.service.js';
 import { diasService } from '../../services/dias.service.js';
+import { remolcadoresService } from '../../services/remolcadores.service.js';
 
 export default class DiaDTO {
     constructor(dia) {
@@ -11,11 +12,12 @@ export default class DiaDTO {
         this.partes = dia.partes;
         this.tripulacion = dia.tripulacion;
         this.feriado = dia.feriado;
+        this.cod_remolcador = dia.cod_remolcador;
     }
 
     validateProps = (dia) => {
         let newDiaProps = Object.keys(dia);
-        let validator = ['fecha', 'partes', 'tripulacion', 'cargo', 'feriado'];
+        let validator = ['fecha', 'partes', 'tripulacion', 'cargo', 'feriado', 'cod_remolcador'];
         let admitedCargos = ['Patrón', 'Maquinista', 'Engrasador', 'Marinero'];
         let tripulacionValidator = ['tripulante', 'cargo']; 
 
@@ -23,6 +25,13 @@ export default class DiaDTO {
             return {
                 isValid: false,
                 message: `Dia properties are not valid: Property feriado should be a Boolean.`
+            };
+        }
+
+        if (!dia.cod_remolcador) {
+            return {
+                isValid: false,
+                message: `Dia properties are not valid: Property cod_remolcador is missing.`
             };
         }
 
@@ -70,6 +79,9 @@ export default class DiaDTO {
     }
 
     validateReferences = async () => {
+        let existingRemolcador = await remolcadoresService.getRemolcadores({ cod_remolcador: this.cod_remolcador });
+        if (!existingRemolcador[0]) throw new Error(`cod_remolcador ${this.cod_remolcador} not found.`);
+
         for (let i = 0; i < this.tripulacion.length; i++) {
             try {
                 let existingTripulante = await tripulantesService.getTripulantes({ cod_tripulante: this.tripulacion[i].tripulante });
@@ -81,9 +93,13 @@ export default class DiaDTO {
     }
 
     validateUnique = async () => {
-        let dias = await diasService.getDias({}, 1);
-        let lastDia = dias[0];
-        if (lastDia && lastDia.fecha.getDay() === this.fecha.getDay() && lastDia.fecha.getMonth() === this.fecha.getMonth() && lastDia.fecha.getFullYear() === this.fecha.getFullYear())
-            throw new Error(`Dia properties are not valid: Dia with fecha ${this.fecha} already exists.`);
+        let dias = await diasService.getDias({ fecha: this.fecha, remolcador: this.cod_remolcador });
+        let alreadyExists = dias[0];
+        if (alreadyExists) throw new Error(`Dia properties are not valid: Dia with fecha ${this.fecha} already exists for remolcador ${this.cod_remolcador}.`);
+
+        let lastDia = await diasService.getDias({}, { sort: { 'fecha': -1 }, limit: 1 });
+        let lastDiaDate = lastDia[0].fecha;
+        if (lastDiaDate.getFullYear() > this.fecha.getFullYear() || lastDiaDate.getMonth() > this.fecha.getMonth() || lastDiaDate.getDate() > this.fecha.getDate())
+            throw new Error(`Dia properties are not valid: Provided fecha must be equal or after last loaded fecha in database: ${lastDiaDate}.`);
     }
 }

@@ -21,12 +21,12 @@ async function getDias(req, res) {
 }
 
 async function postDia(req, res) {
-    const { fecha, tripulacion, feriado } = req.body;
+    const { fecha, tripulacion, feriado, cod_remolcador } = req.body;
     let dia;
     let result;
 
     try {
-        dia = new DiaDTO({ fecha, tripulacion, feriado });
+        dia = new DiaDTO({ fecha, tripulacion, feriado, cod_remolcador });
         await dia.validateReferences();
         await dia.validateUnique();
     } catch (error) {

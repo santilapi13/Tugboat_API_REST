@@ -42,8 +42,6 @@ diaSchema.pre('findOne', function() {
     })
 });
 
-diaSchema.index({ fecha: 1 });
-
 diaSchema.statics.findByFecha = function (year, month, day, remolcador) {
     const startOfDay = new Date(Date.UTC(year, month, day));
     const endOfDay = new Date(Date.UTC(year, month, day + 1));

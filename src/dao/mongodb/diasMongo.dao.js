@@ -31,6 +31,11 @@ export class DiasMongoDAO {
 
             tripulante.tripulante = fullTripulante._id;
         }
+
+        let remolcador = await remolcadorModel.find({ cod_remolcador: dia.cod_remolcador });
+        remolcador = remolcador[0];
+        dia.remolcador = remolcador._id;
+
         return await diaModel.create(dia);
     }
 
