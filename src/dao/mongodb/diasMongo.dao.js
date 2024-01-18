@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { diaModel } from "../model/dia.model.js";
 import { parteModel } from "../model/parte.model.js";
 import { tripulanteModel } from "../model/tripulante.model.js";
@@ -12,13 +11,14 @@ export class DiasMongoDAO {
 
         if (query.remolcador) {
             const remolcador = await remolcadorModel.find({ cod_remolcador: query.remolcador });
+            if (!remolcador[0]) throw new Error(`Remolcador with code ${query.remolcador} not found.`);
             query.remolcador = remolcador[0]._id;
         }
 
         if (!query.fecha) {
             result = await diaModel.find(query).limit(limit).sort(sort);
         } else {
-            result = await diaModel.findByFecha(query.fecha.getFullYear(), query.fecha.getMonth(), query.fecha.getDate(), query.remolcador);
+            result = await diaModel.findByFecha(query.fecha.getFullYear(), query.fecha.getMonth(), query.fecha.getDate() + 1, query.remolcador);
         }
 
         return result;

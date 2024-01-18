@@ -5,8 +5,10 @@ async function getDias(req, res) {
     let { fecha, cod_remolcador, limit } = req.query;
     let dias;
 
-    if (fecha)
+    if (fecha) {
         fecha = new Date(fecha);
+        fecha.setUTCHours(0, 0, 0, 0);
+    }
 
     const query = { fecha, remolcador: cod_remolcador };
 
