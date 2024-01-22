@@ -6,9 +6,11 @@ import { diasService } from '../services/dias.service.js';
 import ParteDTO from '../dao/dto/parte.dto.js';
 
 function validateQueryParams(remolcador, buque, solicitante, confirmado, facturado) {
-    remolcador = remolcadoresService.getRemolcadores({ cod_remolcador: remolcador });
-    if (!remolcador) throw new Error("Remolcador not found.");
-    remolcador = remolcador._id;
+    if (remolcador) {
+        remolcador = remolcadoresService.getRemolcadores({ cod_remolcador: remolcador });
+        if (!remolcador) throw new Error("Remolcador not found.");
+        remolcador = remolcador._id;
+    }
 
     buque = buquesService.getBuques({ cod_buque: buque });
     if (!buque) throw new Error("Buque not found.");
@@ -18,29 +20,24 @@ function validateQueryParams(remolcador, buque, solicitante, confirmado, factura
     if (!solicitante) throw new Error("Solicitante not found.");
     solicitante = solicitante._id;
 
-    if (confirmado !== undefined && !confirmado.match(/^(true|false)$/))
-        throw new Error("Invalid confirmado value.");
-    if (facturado !== undefined && !facturado.match(/^(true|false)$/))
-        throw new Error("Invalid facturado value.");
+    
 
     return { remolcador, buque, solicitante };
 }
 
 async function getPartes(req, res) {
-    let { remolcador, buque, solicitante, confirmado, facturado } = req.query;
+    let { cod_remolcador, cod_buque, cod_solicitante, confirmado, facturado } = req.query;
 
     try {
-        const validatedParams = validateQueryParams(remolcador, buque, solicitante, confirmado, facturado);
-        remolcador = validatedParams.remolcador;
-        buque = validatedParams.buque;
-        solicitante = validatedParams.solicitante;
+        if (confirmado !== undefined && !confirmado.match(/^(true|false)$/)) throw new Error("Invalid confirmado value.");
+        if (facturado !== undefined && !facturado.match(/^(true|false)$/)) throw new Error("Invalid facturado value.");
     } catch (error) {
         return res.sendBadRequestError(error.message);
     }
 
     let partes;
     try {
-        partes = await partesService.getPartes({ remolcador, buque, solicitante, confirmado, facturado });
+        partes = await partesService.getPartes({ cod_remolcador, cod_buque, cod_solicitante, confirmado, facturado });
     } catch (error) {
         return res.sendInternalServerError(error.message);
     }
@@ -49,6 +46,8 @@ async function getPartes(req, res) {
 }
 
 async function parteCreationTransaction(dia, parte) {
+    let result;
+
     try {
         result = await partesService.createParte(parte);
     } catch (error) {
@@ -66,23 +65,23 @@ async function parteCreationTransaction(dia, parte) {
 }
 
 async function postParte(req, res) {
-    let { remolcador, buque, maniobra, hora_inicio, hora_fin, solicitante, bandera, observaciones, practico, otra_embarcacion } = req.body;
+    let { cod_remolcador, cod_buque, cod_maniobra, hora_inicio, hora_fin, cod_solicitante, cod_bandera, observaciones, practico, otra_embarcacion } = req.body;
     let parte;
     let result;
 
     try {
-        parte = new ParteDTO({ remolcador, buque, maniobra, hora_inicio, hora_fin, solicitante, bandera, observaciones, practico, otra_embarcacion });
+        parte = new ParteDTO({ remolcador: cod_remolcador, buque: cod_buque, maniobra: cod_maniobra, hora_inicio, hora_fin, solicitante: cod_solicitante, bandera: cod_bandera, observaciones, practico, otra_embarcacion });
         await parte.validatePropertiesValues();
     } catch (error) {
         return res.sendBadRequestError(error.message);
     }
 
     try {
-        // TODO: Que no sea el último día cargado, sino hacer un get del día que corresponda a la fecha de inicio del parte.
-        let dia = await diasService.getDiaByFecha(hora_inicio);
+        let dia = await diasService.getDias({ fecha: parte.hora_inicio, remolcador: cod_remolcador }, 1);
+        dia = dia[0];
 
         if (!dia)
-            throw new Error("Cannot create a parte for a dia that doesn't exist.");
+            throw new Error(`Cannot create a parte for a dia that doesn't exist (fecha: ${parte.hora_inicio}, remolcador: ${parte.remolcador}).`);
 
         result = await parteCreationTransaction(dia, parte);
     } catch (error) {

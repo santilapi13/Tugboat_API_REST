@@ -18,8 +18,8 @@ class DiasService {
         return await this.dao.create(dia);
     }
 
-    async addParteToDia(fecha, cod_parte) {
-        return await this.dao.addParte(fecha, cod_parte);
+    async addParteToDia(dia, cod_parte) {
+        return await this.dao.addParte(dia, cod_parte);
     }
 
     async updateDia(dia) {

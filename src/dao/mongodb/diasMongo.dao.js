@@ -18,7 +18,7 @@ export class DiasMongoDAO {
         if (!query.fecha) {
             result = await diaModel.find(query).limit(limit).sort(sort);
         } else {
-            result = await diaModel.findByFecha(query.fecha.getFullYear(), query.fecha.getMonth(), query.fecha.getDate() + 1, query.remolcador);
+            result = await diaModel.findByFecha(query.fecha.getUTCFullYear(), query.fecha.getUTCMonth(), query.fecha.getUTCDate(), query.remolcador);
         }
 
         return result;
@@ -56,8 +56,9 @@ export class DiasMongoDAO {
         return await diaModel.findByIdAndUpdate({ _id: oldDia._id }, { tripulacion: dia.tripulacion, feriado: dia.feriado }, { new: true });
     }
 
-    async addParte(fecha, cod_parte) {
-        const dia = await diaModel.findOne({ fecha: fecha });
+    async addParte({ fecha }, cod_parte) {
+        let dia = await this.get({ fecha }, { limit: 1, sort: { fecha: 'desc' } });
+        dia = dia[0];
         if (!dia) throw new Error("Dia not found.");
 
         const parte = await parteModel.findOne({ cod_parte: cod_parte });

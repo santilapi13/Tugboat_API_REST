@@ -51,5 +51,5 @@ mongoose.connect(config.DEVELOPMENT_DB_URL)
     });
 
 const serverExpress = app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT} at ${(new Date())}`);
 });
