@@ -43,15 +43,12 @@ async function postDia(req, res) {
 }
 
 async function putDia(req, res) {
-    let { fecha } = req.params;
-    let { tripulacion, feriado } = req.body;
+    const { fecha, tripulacion, feriado, cod_remolcador } = req.body;
     let dia;
     let result;
 
-    if (!fecha)
-        return res.sendBadRequestError('Fecha is missing');
-
-    fecha = new Date(fecha); 
+    if (!fecha) return res.sendBadRequestError('fecha is missing');
+    if (!cod_remolcador) return res.sendBadRequestError('cod_remolcador is missing');
 
     try {
         /*
@@ -60,7 +57,7 @@ async function putDia(req, res) {
             return res.sendBadRequestError(`Invalid fecha. Expected: ${fechaEsperada}. Last loaded in database: ${fecha}.`);
         */
 
-        dia = new DiaDTO({ fecha, tripulacion, feriado });
+        dia = new DiaDTO({ fecha, tripulacion, feriado, cod_remolcador });
         await dia.validateReferences();
     } catch (error) {
         return res.sendBadRequestError(error.message);

@@ -40,7 +40,13 @@ export class DiasMongoDAO {
     }
 
     async update(dia) {
-        let oldDia = await this.getByFecha(dia);
+        dia.remolcador = dia.cod_remolcador;
+        delete dia.cod_remolcador;
+        
+        let oldDia = await this.get(dia, { limit: 1, sort: { fecha: 'desc' } });
+        oldDia = oldDia[0];
+        if (!oldDia) throw new Error(`Failed to update: Dia with fecha ${dia.fecha} and cod_remolcador ${dia.remolcador} not found.`);
+
         for (const tripulante of dia.tripulacion) {
             let fullTripulante = await tripulanteModel.find({ cod_tripulante: tripulante.tripulante });
             fullTripulante = fullTripulante[0];
