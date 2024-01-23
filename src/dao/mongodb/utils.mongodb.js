@@ -26,17 +26,24 @@ async function validateExistence(id, model) {
 }
 
 async function parteCodesToIds(parte) {
-    let remolcador = await remolcadorModel.find({ cod_remolcador: parte.remolcador });
-    if (!remolcador[0]) throw new Error(`Remolcador with code ${parte.remolcador} not found.`);
-    parte.remolcador = remolcador[0]._id;
 
-    let buque = await buqueModel.find({ cod_buque: parte.buque });
-    if (!buque[0]) throw new Error(`Buque with code ${parte.buque} not found.`);
-    parte.buque = buque[0]._id;
+    if (parte.remolcador) {
+        let remolcador = await remolcadorModel.find({ cod_remolcador: parte.remolcador });
+        if (!remolcador[0]) throw new Error(`Remolcador with code ${parte.remolcador} not found.`);
+        parte.remolcador = remolcador[0]._id;
+    }
 
-    let solicitante = await solicitanteModel.find({ cod_solicitante: parte.solicitante });
-    if (!solicitante[0]) throw new Error(`Solicitante with code ${parte.solicitante} not found.`);
-    parte.solicitante = solicitante[0]._id;
+    if (parte.buque) {
+        let buque = await buqueModel.find({ cod_buque: parte.buque });
+        if (!buque[0]) throw new Error(`Buque with code ${parte.buque} not found.`);
+        parte.buque = buque[0]._id;
+    }
+
+    if (parte.solicitante) {
+        let solicitante = await solicitanteModel.find({ cod_solicitante: parte.solicitante });
+        if (!solicitante[0]) throw new Error(`Solicitante with code ${parte.solicitante} not found.`);
+        parte.solicitante = solicitante[0]._id;
+    }
 
     if (!parte.maniobra || !parte.bandera)
         return parte;

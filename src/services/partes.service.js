@@ -7,6 +7,7 @@ class PartesService {
 
     async getPartes(query = {}, sort = { hora_inicio: 'desc' }, limit = 0) {
         const filters = { sort, limit };
+
         return await this.dao.get(query, filters);
     }
 

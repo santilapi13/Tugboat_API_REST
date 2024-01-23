@@ -5,12 +5,16 @@ import utils from './utils.mongodb.js';
 export class PartesMongoDAO {
     constructor() {}
 
-    async get(filter = {}) {
-        if (filter['_id'] && !mongoose.Types.ObjectId.isValid(filter['_id']))
-            throw new Error('Invalid id');
+    async get(query = {}, { limit, sort }) {
+        query = await utils.parteCodesToIds({ remolcador: query.cod_remolcador, buque: query.cod_buque, solicitante: query.cod_solicitante, confirmado: query.confirmado, facturado: query.facturado  });
 
-        let result = await parteModel.find(filter);
+        if (!query.remolcador) delete query.remolcador;
+        if (!query.buque) delete query.buque;
+        if (!query.olicitante) delete query.solicitante;
+        if (query.confirmado === undefined) delete query.confirmado;
+        if (query.facturado === undefined) delete query.facturado;
 
+        let result = await parteModel.find(query).limit(limit).sort(sort);
         return result;
     }
 
