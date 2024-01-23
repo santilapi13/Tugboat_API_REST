@@ -11,16 +11,6 @@ class PartesService {
         return await this.dao.get(query, filters);
     }
 
-    async getParteById(id) {
-        const parte = await this.dao.get({ _id: id });
-        return parte ? parte[0] : null;
-    }
-
-    async getParteByCode(cod_parte) {
-        const parte = await this.dao.get({ cod_parte });
-        return parte ? parte[0] : null;
-    }
-
     async createParte(parte) {
         return await this.dao.create(parte);
     }

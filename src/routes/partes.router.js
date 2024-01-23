@@ -7,7 +7,9 @@ export class PartesRouter extends Router {
         
         this.post('/', ["CAPITAN", "ADMIN"], partesController.postParte);
 
-        this.put('/', ["SUPERVISOR", "ADMIN"], partesController.putParte)
+        this.post('/pendientes', ["CAPITAN", "ADMIN"], partesController.postPartesPendientes);
+
+        this.put('/:cod_parte', ["SUPERVISOR", "ADMIN"], partesController.putParte);
 
         this.put('/:cod_parte/confirmacion', ["SUPERVISOR", "ADMIN"], partesController.confirmarParte)
 

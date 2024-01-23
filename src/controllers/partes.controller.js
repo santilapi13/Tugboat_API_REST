@@ -91,37 +91,43 @@ async function postParte(req, res) {
     res.sendCreated(result);
 }
 
-// TODO: postPartes que reciba un array de partes pendientes
+async function postPartesPendientes(req, res) {
+    // TODO: postPartes que reciba un array de partes pendientes
+}
 
 async function putParte(req, res) {
     const { cod_parte } = req.params;
-    let { remolcador, buque, maniobra, solicitante, bandera } = req.body;
+    let { cod_buque, cod_maniobra, cod_solicitante, cod_bandera } = req.body;
     let parte;
     let result;
 
     try {
-        parte = await partesService.getParteByCode(cod_parte);
-        if (!parte) throw new Error("Parte not found.");
+        parte = await partesService.getPartes({ cod_parte });
+        parte = parte[0];
+        if (!parte) throw new Error(`Parte with code ${cod_parte} not found.`);
 
-        let { hora_inicio, hora_fin, observaciones, practico, otra_embarcacion } = parte;
+        let { remolcador, hora_inicio, hora_fin, observaciones, practico, otra_embarcacion } = parte;
 
-        if (!remolcador)
-            remolcador = parte.remolcador;
-        if (!buque)
-            buque = parte.buque;
-        if (!maniobra)
-            maniobra = parte.maniobra;
-        if (!solicitante)
-            solicitante = parte.solicitante;
-        if (!bandera)
-            bandera = parte.bandera;
+        if (!cod_buque)
+            cod_buque = parte.buque.cod_buque;
+        if (!cod_maniobra)
+            cod_maniobra = parte.maniobra.cod_maniobra;
+        if (!cod_solicitante)
+            cod_solicitante = parte.solicitante.cod_solicitante;
+        if (!cod_bandera)
+            cod_bandera = parte.bandera.cod_bandera;
 
-        parte = new ParteDTO({ remolcador, buque, maniobra, hora_inicio, hora_fin, solicitante, bandera, observaciones, practico, otra_embarcacion });
+        parte = new ParteDTO({ remolcador: remolcador.cod_remolcador, buque: cod_buque, maniobra: cod_maniobra, hora_inicio, hora_fin, solicitante: cod_solicitante, bandera: cod_bandera, observaciones, practico, otra_embarcacion });
         await parte.validatePropertiesValues();
         
-        result = await partesService.updateParte(cod_parte, parte);
     } catch (error) {
         return res.sendBadRequestError(error.message);
+    }
+
+    try {
+        result = await partesService.updateParte(cod_parte, parte);
+    } catch (error) {
+        return res.sendInternalServerError(error.message);
     }
 
     res.sendOk(result);
@@ -132,8 +138,9 @@ async function confirmarParte(req, res) {
     let parte;
 
     try {
-        parte = await partesService.getParteByCode(cod_parte);
-        if (!parte) throw new Error("Parte not found.");
+        parte = await partesService.getPartes({ cod_parte });
+        parte = parte[0];
+        if (!parte) throw new Error(`Parte with code ${cod_parte} not found.`);
 
         parte = await partesService.updateParte(cod_parte, { confirmado: !parte.confirmado });
     } catch (error) {
@@ -148,8 +155,9 @@ async function facturarParte(req, res) {
     let parte;
 
     try {
-        parte = await partesService.getParteByCode(cod_parte);
-        if (!parte) throw new Error("Parte not found.");
+        parte = await partesService.getPartes({ cod_parte });
+        parte = parte[0];
+        if (!parte) throw new Error(`Parte with code ${cod_parte} not found.`);
 
         parte = await partesService.updateParte(cod_parte, { facturado: !parte.facturado });
     } catch (error) {
@@ -158,4 +166,4 @@ async function facturarParte(req, res) {
 
     res.sendOk(parte);
 }
-export default { getPartes, postParte, putParte, confirmarParte, facturarParte };
+export default { getPartes, postParte, putParte, confirmarParte, facturarParte, postPartesPendientes };

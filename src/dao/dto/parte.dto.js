@@ -51,18 +51,18 @@ export default class ParteDTO {
 
     async validatePropertiesValues() {
         let remolcador = await remolcadoresService.getRemolcadores({ cod_remolcador: this.remolcador });
-        if (!remolcador) throw new Error("Remolcador not found.");
+        if (!remolcador) throw new Error(`Couldn't update parte: remolcador with cod_remolcador ${this.remolcador} not found.`);
 
         let buque = await buquesService.getBuques({ cod_buque: this.buque });
-        if (!buque) throw new Error("Buque not found.");
+        if (!buque) throw new Error(`Couldn't update parte: buque with cod_buque ${this.buque} not found.`);
 
         let maniobra = await maniobrasService.getManiobras({ cod_maniobra: this.maniobra });
-        if (!maniobra) throw new Error("Maniobra not found.");
+        if (!maniobra) throw new Error(`Couldn't update parte: maniobra with cod_maniobra ${this.maniobra} not found.`);
 
         let solicitante = await solicitantesService.getSolicitantes({ cod_solicitante: this.solicitante });
-        if (!solicitante) throw new Error("Solicitante not found.");
+        if (!solicitante) throw new Error(`Couldn't update parte: solicitante with cod_solicitante ${this.solicitante} not found.`);
 
         let bandera = await banderasService.getBanderas({ cod_bandera: this.bandera });
-        if (!bandera) throw new Error("Bandera not found.");
+        if (!bandera) throw new Error(`Couldn't update parte: bandera with cod_bandera ${this.bandera} not found.`);
     }
 }
