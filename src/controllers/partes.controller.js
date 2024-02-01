@@ -92,7 +92,47 @@ async function postParte(req, res) {
 }
 
 async function postPartesPendientes(req, res) {
-    // TODO: postPartes que reciba un array de partes pendientes
+    let { cod_remolcador, partes } = req.body;
+    let result = [];
+    let dia;
+
+    for (const parte of partes) {
+        let parteDTO = {
+            remolcador: cod_remolcador,
+            buque: parte.cod_buque,
+            maniobra: parte.cod_maniobra,
+            hora_inicio: parte.hora_inicio,
+            hora_fin: parte.hora_fin,
+            solicitante: parte.cod_solicitante,
+            bandera: parte.cod_bandera,
+            observaciones: parte.observaciones,
+            practico: parte.practico,
+            otra_embarcacion: parte.otra_embarcacion
+        };
+
+        try {
+            parteDTO = new ParteDTO(parteDTO);
+            await parteDTO.validatePropertiesValues();
+
+            dia = await diasService.getDias({ fecha: parteDTO.hora_inicio, remolcador: cod_remolcador }, 1);
+            dia = dia[0];
+
+            if (!dia)
+                throw new Error(`Cannot create a parte for a dia that doesn't exist (fecha: ${parteDTO.hora_inicio}, remolcador: ${parteDTO.remolcador}).`);
+        } catch (error) {
+            result.push({ creationStatus: "error", parte: parte, error: "bad request", message: error.message });
+            continue;
+        }
+
+        try {
+            const payload = await parteCreationTransaction(dia, parteDTO);
+            result.push({ creationStatus: "success", parte: parte, payload});
+        } catch (error) {
+            result.push({ creationStatus: "error", parte: parte, error: "server internal error", message: error.message });
+        }
+    }
+
+    res.sendOk(result);
 }
 
 async function putParte(req, res) {
