@@ -20,6 +20,8 @@ const mongodbPersistence = async function() {
     Tripulantes = Tripulantes.TripulantesMongoDAO;
     Solicitantes = await import('./mongodb/solicitantesMongo.dao.js');
     Solicitantes = Solicitantes.SolicitantesMongoDAO;
+    Users = await import('./mongodb/usersMongo.dao.js');
+    Users = Users.UsersMongoDAO;
 }
 
 let Partes, Maniobras, Buques, Banderas, Capitanes, Dias, Remolcadores, Tripulantes, Solicitantes;
