@@ -4,6 +4,9 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 
+import { initializePassport } from './config/passport.config.js'
+import passport from 'passport';
+
 import { PartesRouter } from './routes/partes.router.js';
 import { BanderasRouter } from './routes/banderas.router.js';
 import { BuquesRouter } from './routes/buques.router.js';
@@ -13,6 +16,8 @@ import { ManiobrasRouter } from './routes/maniobras.router.js';
 import { RemolcadoresRouter } from './routes/remolcadores.router.js';
 import { SolicitantesRouter } from './routes/solicitantes.router.js';
 import { TripulantesRouter } from './routes/tripulantes.router.js';
+import { UsersRouter } from './routes/users.router.js';
+import { SessionsRouter } from './routes/sessions.router.js';
 
 const PORT = config.PORT;
 
@@ -25,12 +30,16 @@ const maniobrasRouter = new ManiobrasRouter();
 const remolcadoresRouter = new RemolcadoresRouter();
 const solicitantesRouter = new SolicitantesRouter();
 const tripulantesRouter = new TripulantesRouter();
+const usersRouter = new UsersRouter();
+const sessionsRouter = new SessionsRouter();
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+initializePassport();
+app.use(passport.initialize());
 app.use(cors());
 
 app.use('/api/partes', partesRouter.getRouter());
@@ -42,6 +51,8 @@ app.use('/api/maniobras', maniobrasRouter.getRouter());
 app.use('/api/remolcadores', remolcadoresRouter.getRouter());
 app.use('/api/solicitantes', solicitantesRouter.getRouter());
 app.use('/api/tripulantes', tripulantesRouter.getRouter());
+app.use('/api/users', usersRouter.getRouter());
+app.use('/api/sessions', sessionsRouter.getRouter());
 
 mongoose.connect(config.DEVELOPMENT_DB_URL)
     .then(() => {

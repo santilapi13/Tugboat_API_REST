@@ -2,9 +2,7 @@ import { Router as ExpressRouter } from 'express';
 import { config } from '../config/dotenv.config.js';
 import jwt from 'jsonwebtoken';
 
-const SUPERVISOR_KEY = config.SUPERVISOR_KEY;
-const CAPTAIN_KEY = config.CAPTAIN_KEY;
-const ADMIN_KEY = config.ADMIN_KEY;
+const PRIVATE_KEY = config.PRIVATE_KEY;
 
 export default class Router {
     constructor() {
@@ -71,39 +69,20 @@ export default class Router {
     }
 
     handlePolicies = policies => (req, res, next) => {
-        const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+        if (policies[0] === "PUBLIC") return next();
+
+        const token = req.cookies.authToken || req.headers.authorization?.split(' ')[1];
 
         if (!token)
             return res.sendUnauthorizedError('No token provided');
 
         try {
-            const decodedWithoutVerification = jwt.decode(token);
-
-            if (!decodedWithoutVerification)
-                return res.sendUnauthorizedError('Invalid token');
-
-            const { role } = decodedWithoutVerification;
-
-            let key;
-            switch (role) {
-                case "SUPERVISOR": key = SUPERVISOR_KEY; 
-                break;
-                case "CAPTAIN": key = CAPTAIN_KEY;
-                break;
-                case "ADMIN": key = ADMIN_KEY;
-                break;
-                default: key = null; 
-            }
-
-            if (!key)
-                return res.sendUnauthorizedError('Invalid role');
-
-            jwt.verify(token, key, (err, decoded) => {
+            jwt.verify(token, PRIVATE_KEY, (err, decoded) => {
                 if (err) return res.sendUnauthorizedError('Invalid token');
 
-                if (!policies.includes(decoded.role.toUpperCase())) return res.sendForbiddenError('You are not allowed to access this resource');
+                if (!policies.includes(decoded.user.role.toUpperCase())) return res.sendForbiddenError('User not allowed to access this resource');
                 
-                req.user = decoded;
+                req.user = decoded.user;
             });
         } catch (error) {
             return res.sendUnauthorizedError(error.message);

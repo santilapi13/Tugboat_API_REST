@@ -9,6 +9,16 @@ class UsersService {
         return await this.dao.get(query);
     }
 
+    async getUserByUsername(username) {
+        let user = await this.dao.get({ username });
+        
+        if (user && user.length > 0)
+            return user[0];
+
+        return null;
+    
+    }
+
     async createUser(user) {
         return await this.dao.create(user);
     }
