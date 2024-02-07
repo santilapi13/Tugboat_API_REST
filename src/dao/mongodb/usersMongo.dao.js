@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { usersModel } from "./model/user.model.js";
+import { usersModel } from "../model/user.model.js";
 
 export class UsersMongoDAO {
     constructor() {

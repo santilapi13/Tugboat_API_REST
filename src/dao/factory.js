@@ -24,7 +24,7 @@ const mongodbPersistence = async function() {
     Users = Users.UsersMongoDAO;
 }
 
-let Partes, Maniobras, Buques, Banderas, Capitanes, Dias, Remolcadores, Tripulantes, Solicitantes;
+let Partes, Maniobras, Buques, Banderas, Capitanes, Dias, Remolcadores, Tripulantes, Solicitantes, Users;
 switch (config.PERSISTENCE) {
     case 'mongodb':
         await mongodbPersistence();
@@ -34,4 +34,4 @@ switch (config.PERSISTENCE) {
         throw new Error("Invalid persistence type");
 }
 
-export { Partes, Maniobras, Buques, Banderas, Capitanes, Dias, Remolcadores, Tripulantes, Solicitantes };
+export { Partes, Maniobras, Buques, Banderas, Capitanes, Dias, Remolcadores, Tripulantes, Solicitantes, Users };
