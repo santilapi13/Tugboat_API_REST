@@ -40,7 +40,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 initializePassport();
 app.use(passport.initialize());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}));
 
 app.use('/api/partes', partesRouter.getRouter());
 app.use('/api/banderas', banderasRouter.getRouter());
