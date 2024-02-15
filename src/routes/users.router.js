@@ -5,8 +5,8 @@ export class UsersRouter extends Router {
     init() {
         this.get('/', ["ADMIN"], usersController.getUsers);
 
-        this.get('/:cod_user', ["ADMIN"], usersController.getUserById);
+        this.get('/:uid', ["ADMIN"], usersController.getUserById);
 
-        this.delete('/:cod_user', ["ADMIN"], usersController.deleteUser);
+        this.delete('/:uid', ["ADMIN"], usersController.deleteUser);
     }
 }
