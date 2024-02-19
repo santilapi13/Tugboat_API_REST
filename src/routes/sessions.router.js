@@ -8,8 +8,6 @@ export class SessionsRouter extends Router {
 
         this.post('/login', ['PUBLIC'], passportCall('login'), sessionsController.login);
 
-        //this.get('/logout', ['USER', 'ADMIN', 'PREMIUM'], sessionsController.logout);
-
-        //this.get('/current', ['USER', 'ADMIN', 'PREMIUM'], sessionsController.current);
+        this.post('/logout', ['ADMIN', 'CAPITAN', 'CONTADOR', 'SUPERVISOR'], sessionsController.logout);
     }
 }

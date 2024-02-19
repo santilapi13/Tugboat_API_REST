@@ -20,4 +20,9 @@ async function login(req, res, next) {
     }
 }
 
-export default { signup, login };
+async function logout(req, res) {
+    res.clearCookie('authToken');
+    res.sendOk();
+}
+
+export default { signup, login, logout };
