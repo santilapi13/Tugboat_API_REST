@@ -8,13 +8,20 @@ async function login(req, res, next) {
     try {
         const user = req.user;
         let token = generateJWT(user);
+        const maxAge = 1000*60*60*3;
 
         res.cookie('authToken', token, {
-            maxAge:1000*60*60,
+            maxAge: maxAge,
             httpOnly:true
         });
+        
+        const result = {
+            username: user.username,
+            role: user.role,
+            maxAge: maxAge
+        }
 
-        res.sendOk(user);
+        res.sendOk(result);
     } catch (error) {
         res.sendInternalServerError(error.message);
     }
