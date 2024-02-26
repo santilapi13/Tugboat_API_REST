@@ -12,3 +12,4 @@ export const config = {
 
 console.log('Mode variable: ', config.MODE);
 console.log('Port variable: ', config.PORT);
+console.log('Mongo URL: ',  DEVELOPMENT_DB_URL);
