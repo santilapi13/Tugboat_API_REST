@@ -40,8 +40,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 initializePassport();
 app.use(passport.initialize());
+
+const allowedOrigins = ['https://administracion-puerto.vercel.app'];
 app.use(cors({
-    origin: 'https://administracion-puerto.vercel.app/',
+    origin: allowedOrigins,
     credentials: true,
 }));
 
