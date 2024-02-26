@@ -41,7 +41,7 @@ app.use(cookieParser());
 initializePassport();
 app.use(passport.initialize());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://administracion-puerto.vercel.app/',
     credentials: true,
 }));
 
