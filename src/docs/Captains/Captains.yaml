@@ -1,0 +1,92 @@
+paths:
+  /api/capitanes:
+    get:
+      summary: Get all captains
+      tags:
+        - Captains
+      responses:
+        '200':
+          description: It retrieves all the captains from the database.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Captain'
+        '500':
+          description: An error occurred while trying to retrieve the captains from the database.
+    post:
+      summary: Create a new captain
+      tags:
+        - Captains
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewCaptain'
+      responses:
+        '201':
+          description: The captain was successfully added to the database.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Captain'
+        '500':
+          description: An error occurred while trying to add the captain to the database.
+  /api/capitanes/{cod_capitan}:
+    get:
+      summary: Get a captain by their code
+      tags:
+        - Captains
+      parameters:
+        - in: path
+          name: cod_capitan
+          required: true
+          schema:
+            type: string
+          description: Captain code
+      responses:
+        '200':
+          description: Captain information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Captain'
+        '400':
+          description: Invalid captain code
+        '500':
+          description: An error occurred while trying to retrieve the captain from the database.
+components:
+  schemas:
+    Captain:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The MongoDB auto-generated id of the captain.
+        cod_capitan:
+          type: string
+          description: The code of the captain.
+        first_name:
+          type: string
+          description: The first name of the captain.
+        last_name:
+          type: string
+          description: The last name of the captain.
+      example:
+        _id: ObjectId('6913824hi3hre9182ye')
+        cod_capitan: '1'
+        first_name: 'John'
+        last_name: 'Doe'
+  requestBodies:
+    NewCaptain:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+      example:
+        first_name: 'John'
+        last_name: 'Doe'

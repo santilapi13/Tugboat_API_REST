@@ -1,0 +1,85 @@
+paths:
+  /api/buques:
+    get:
+      summary: Get all ships
+      tags:
+        - Ships
+      responses:
+        '200':
+          description: It retrieves all the ships from the database.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ship'
+        '500':
+          description: An error occurred while trying to retrieve the ships from the database.
+    post:
+      summary: Create a new ship
+      tags:
+        - Ships
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewShip'
+      responses:
+        '201':
+          description: The ship was successfully added to the database.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ship'
+        '500':
+          description: An error occurred while trying to add the ship to the database.
+  /api/buques/{cod_buque}:
+    get:
+      summary: Get a ship by its code
+      tags:
+        - Ships
+      parameters:
+        - in: path
+          name: cod_buque
+          required: true
+          schema:
+            type: string
+          description: Ship code
+      responses:
+        '200':
+          description: Ship information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ship'
+        '400':
+          description: Invalid ship code
+        '500':
+          description: An error occurred while trying to retrieve the ship from the database.
+components:
+  schemas:
+    Ship:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The MongoDB auto-generated id of the ship.
+        cod_buque:
+          type: string
+          description: The code of the ship.
+        title:
+          type: string
+          description: The name of the ship.
+      example:
+        _id: ObjectId('6913824hi3hre9182ye')
+        cod_bandera: '1'
+        title: 'Ara100'
+  requestBodies:
+    NewShip:
+      type: object
+      properties:
+        title:
+          type: string
+      example:
+        title: 'Ara100'

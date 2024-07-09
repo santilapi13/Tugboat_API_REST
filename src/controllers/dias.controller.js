@@ -51,12 +51,6 @@ async function putDia(req, res) {
     if (!cod_remolcador) return res.sendBadRequestError('cod_remolcador is missing');
 
     try {
-        /*
-        const fecha = await diasService.getDias({}, { sort: { 'fecha': -1 }, limit: 1 })[0].fecha; 
-        if (fechaEsperada.getDay() !== fecha.getDay() || fechaEsperada.getMonth() !== fecha.getMonth() || fechaEsperada.getFullYear() !== fecha.getFullYear())
-            return res.sendBadRequestError(`Invalid fecha. Expected: ${fechaEsperada}. Last loaded in database: ${fecha}.`);
-        */
-
         dia = new DiaDTO({ fecha, tripulacion, feriado, cod_remolcador });
         await dia.validateReferences();
     } catch (error) {

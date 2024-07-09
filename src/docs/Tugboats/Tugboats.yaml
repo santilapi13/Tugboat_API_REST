@@ -1,0 +1,90 @@
+paths:
+  /api/remolcadores:
+    get:
+      summary: Retrieve all tugboats
+      tags:
+        - Tugboats
+      responses:
+        '200':
+          description: It retrieves all the tugboats from the database.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tugboat'
+        '500':
+          description: An error occurred while trying to retrieve the tugboats from the database.
+    post:
+      summary: Create a new tugboat
+      tags:
+        - Tugboats
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewTugboat'
+      responses:
+        '201':
+          description: The tugboat was successfully added to the database.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tugboat'
+        '500':
+          description: An error occurred while trying to add the tugboat to the database.
+  /api/remolcadores/{cod_remolcador}:
+    get:
+      summary: Retrieve a tugboat by its code
+      tags:
+        - Tugboats
+      parameters:
+        - name: cod_remolcador
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Code of the tugboat to retrieve
+      responses:
+        '200':
+          description: Tugboat information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tugboat'
+        '400':
+          description: Invalid tugboat code
+        '500':
+          description: An error occurred while trying to retrieve the tugboat from the database.
+components:
+  schemas:
+    Tugboat:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The MongoDB auto-generated id of the tugboat.
+        cod_remolcador:
+          type: string
+          description: The code of the tugboat.
+        title:
+          type: string
+          description: The title or name of the tugboat.
+      example:
+        _id: ObjectId('6913824hi3hre9182ye')
+        cod_remolcador: '1'
+        title: 'Tugboat 1'
+  requestBodies:
+    NewTugboat:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                description: The title or name of the tugboat.
+            example:
+              title: 'Tugboat 1'

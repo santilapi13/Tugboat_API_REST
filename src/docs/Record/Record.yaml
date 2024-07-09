@@ -1,0 +1,307 @@
+paths:
+  /api/partes:
+    get:
+      summary: Retrieve records based on query parameters.
+      tags:
+        - Record
+        - Tugboats
+        - Ships
+        - Clients
+      parameters:
+        - name: cod_remolcador
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Code of the tugboat associated with the records.
+        - name: cod_buque
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Code of the ship associated with the records.
+        - name: cod_solicitante
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Code of the client associated with the records.
+        - name: confirmado
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: Indicates if the records are confirmed.
+        - name: facturado
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: Indicates if the records are billed.
+      responses:
+        '200':
+          description: A list of records specified by the query parameters.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Record'
+        '400':
+          description: Bad request
+        '500':
+          description: An error occurred while trying to retrieve the records from the database.
+    post:
+      summary: Create a new record and automatically add it to the corresponding day.
+      tags:
+        - Record
+        - Tugboats
+        - Ships
+        - Clients
+        - Days
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewRecord'
+      responses:
+        '201':
+          description: Record created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Record'
+        '400':
+          description: Bad request
+        '500':
+          description: An error occurred while trying to create the record.
+  /api/partes/pendientes:
+    post:
+      summary: It is the same as POST at /api/partes but here it can create multiple records at once for a single day and tugboat.
+      tags:
+        - Record
+        - Tugboats
+        - Ships
+        - Clients
+        - Days
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+            type: array
+            items:
+              $ref: '#/components/requestBodies/NewRecord'
+      responses:
+        '200':
+          description: Pending records created successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    creationStatus:
+                      type: string
+                      description: The status of the record creation.
+                    parte:
+                      $ref: '#/components/schemas/Record'
+        '400':
+          description: Bad request
+        '500':
+          description: An error occurred while trying to create the pending records.
+  /api/partes/{cod_parte}:
+    put:
+      summary: Update a record by its code.
+      tags:
+        - Record
+      parameters:
+        - name: cod_parte
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Code of the record to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewRecord'
+      responses:
+        '200':
+          description: Record updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Record'
+        '400':
+          description: Bad request
+        '500':
+          description: An error occurred while trying to update the record.
+  /api/partes/{cod_parte}/confirmacion:
+    put:
+      summary: Confirm or unconfirm a record by its code.
+      tags:
+        - Record
+      parameters:
+        - name: cod_parte
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Code of the record to confirm/unconfirm.
+      responses:
+        '200':
+          description: Record confirmed/unconfirmed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Record'
+        '400':
+          description: Bad request
+  /api/partes/{cod_parte}/facturacion:
+    put:
+      summary: Bill or unbill a record by its code.
+      tags:
+        - Record
+      parameters:
+        - name: cod_parte
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Code of the record to bill/unbill.
+      responses:
+        '200':
+          description: Record billed/unbilled successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Record'
+        '400':
+          description: Bad request
+components:
+  schemas:
+    Record:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The MongoDB auto-generated id of the record.
+        remolcador:
+          $ref: '#/components/schemas/Tugboat'
+          description: The tugboat associated with the record.
+        buque:
+          $ref: '#/components/schemas/Ship'
+          description: The ship associated with the record.
+        maniobra:
+          $ref: '#/components/schemas/Maneuver'
+          description: The maneuver associated with the record.
+        hora_inicio:
+          type: string
+          format: date-time
+          description: The start time of the record.
+        hora_fin:
+          type: string
+          format: date-time
+          description: The end time of the record.
+        solicitante:
+          $ref: '#/components/schemas/Client'
+          description: The requester associated with the record.
+        bandera:
+          $ref: '#/components/schemas/Flag'
+          description: The flag associated with the record.
+        observaciones:
+          type: string
+          description: Observations related to the record.
+        practico:
+          type: string
+          description: Practical information related to the record.
+        otra_embarcacion:
+          type: string
+          description: Another vessel related to the record.
+        confirmado:
+          type: boolean
+          description: Indicates if the record is confirmed.
+        facturado:
+          type: boolean
+          description: Indicates if the record is billed.
+        cod_parte:
+          type: number
+          description: The code of the record.
+      example:
+        _id: ObjectId('6913824hi3hre9182ye')
+        remolcador:
+          _id: ObjectId('6913824hi3hre9182ye')
+          cod_remolcador: '1'
+        buque:
+          _id: ObjectId('6913824hi3hre9182ye')
+          cod_buque: 'ABC123'
+        maniobra:
+          _id: ObjectId('6913824hi3hre9182ye')
+          cod_maniobra: 'MAN001'
+        hora_inicio: '2024-07-10T08:00:00Z'
+        hora_fin: '2024-07-10T12:00:00Z'
+        solicitante:
+          _id: ObjectId('6913824hi3hre9182ye')
+          cod_solicitante: 'SOL001'
+        bandera:
+          _id: ObjectId('6913824hi3hre9182ye')
+          cod_bandera: 'BAN001'
+        observaciones: 'Observaciones sobre la maniobra realizada.'
+        practico: 'Práctico asignado: Juan Pérez'
+        otra_embarcacion: 'Nombre de otra embarcación involucrada'
+        confirmado: false
+        facturado: false
+        cod_parte: '1234567890'
+  requestBodies:
+    NewRecord:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              remolcador:
+                type: string
+                description: Code of the tugboat associated with the record.
+              buque:
+                type: string
+                description: Code of the ship associated with the record.
+              maniobra:
+                type: string
+                description: Code of the maneuver associated with the record.
+              hora_inicio:
+                type: string
+                format: date-time
+                description: The start time of the record.
+              hora_fin:
+                type: string
+                format: date-time
+                description: The end time of the record.
+              solicitante:
+                type: string
+                description: Code of the client associated with the record.
+              bandera:
+                type: string
+                description: Code of the flag associated with the record.
+              observaciones:
+                type: string
+                description: Observations related to the record.
+              practico:
+                type: string
+                description: Practical information related to the record.
+              otra_embarcacion:
+                type: string
+                description: Another vessel related to the record.
+              confirmado:
+                type: boolean
+                description: Indicates if the record is confirmed.
+              facturado:
+                type: boolean
+                description: Indicates if the record is billed.
+              cod_parte:
+                type: number
+                description: The code of the record.

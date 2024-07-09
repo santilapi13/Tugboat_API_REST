@@ -1,0 +1,93 @@
+paths:
+  /api/tripulantes:
+    get:
+      summary: Get all crew members
+      tags:
+        - CrewMembers
+      responses:
+        '200':
+          description: It retrieves all the crew members from the database.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrewMember'
+        '500':
+          description: An error occurred while trying to retrieve the crew members from the database.
+    post:
+      summary: Create a new crew member
+      tags:
+        - CrewMembers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewCrewMember'
+      responses:
+        '201':
+          description: The crew member was successfully added to the database.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrewMember'
+        '500':
+          description: An error occurred while trying to add the crew member to the database.
+  /api/tripulantes/{cod_tripulante}:
+    get:
+      summary: Get a crew member by their code
+      tags:
+        - CrewMembers
+      parameters:
+        - in: path
+          name: cod_tripulante
+          required: true
+          schema:
+            type: string
+          description: Crew member code
+      responses:
+        '200':
+          description: Crew member information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrewMember'
+        '400':
+          description: Invalid crew member code
+        '500':
+          description: An error occurred while trying to retrieve the crew member from the database.
+components:
+  schemas:
+    CrewMember:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The MongoDB auto-generated id of the crew member.
+        cod_tripulante:
+          type: string
+          description: The code of the crew member.
+        first_name:
+          type: string
+          description: The first name of the crew member.
+        last_name:
+          type: string
+          description: The last name of the crew member.
+      example:
+        _id: ObjectId('6913824hi3hre9182ye')
+        cod_tripulante: '1'
+        first_name: 'John'
+        last_name: 'Doe'
+  requestBodies:
+    NewCrewMember:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+      example:
+        first_name: 'John'
+        last_name: 'Doe'
+

@@ -5,18 +5,26 @@ async function getRemolcadores(req, res) {
         const remolcadores = await remolcadoresService.getRemolcadores();
         res.sendOk(remolcadores);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        req.logger.error(`Error fetching all tugboats: ${error.message}`);
+        res.sendInternalServerError(error.message);
     }
 }
 
 async function getRemolcadorByCode(req, res) {
     const { cod_remolcador } = req.params;
+    let remolcador;
 
     try {
-        const remolcador = await remolcadoresService.getRemolcadores({ cod_remolcador });
+        remolcador = await remolcadoresService.getRemolcadores({ cod_remolcador });
+
+        if (!remolcador) {
+            return res.sendBadRequestError(`Tugboat with code ${cod_remolcador} not found.`);
+        }
+
         res.sendOk(remolcador);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        req.logger.error(`Error fetching tugboat with code ${cod_remolcador}: ${error.message}`);
+        res.sendInternalServerError(error.message);
     }
 }
 
@@ -27,7 +35,8 @@ async function postRemolcador(req, res) {
         const remolcador = await remolcadoresService.createRemolcador({ title });
         res.sendCreated(remolcador);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        req.logger.error(`Error creating tugboat named ${title}: ${error.message}`);
+        res.sendInternalServerError(error.message);
     }
 }
 

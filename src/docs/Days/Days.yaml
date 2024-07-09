@@ -1,0 +1,178 @@
+paths:
+  /api/dias:
+    get:
+      summary: Retrieve days based on query parameters. They are ordered by date in descending order. It exists an unique day for each date and tugboat.
+      tags:
+        - Days
+        - Tugboats
+        - Records
+      parameters:
+        - name: fecha
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Date filter for days
+        - name: cod_remolcador
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Code of the tugboat associated with the days
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            description: Maximum number of days to retrieve
+      responses:
+        '200':
+          description: A list of the days specified by the query parameters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Day'
+        '400':
+          description: Bad request
+        '500':
+          description: An error occurred while trying to retrieve the days from the database
+    post:
+      summary: Create a new day for a date, specifying the crew and the tugboat.
+      tags:
+        - Days
+        - Tugboats
+        - CrewMembers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewDay'
+      responses:
+        '201':
+          description: Day created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Day'
+        '400':
+          description: Bad request
+        '500':
+          description: An error occurred while trying to create the day
+    put:
+      summary: Update a the crew, the holiday status of a day or both for a given date and tugboat. If a crew list is provided, it will replace the existing one.
+      tags:
+        - Days
+        - Tugboats
+        - CrewMembers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewDay'
+      responses:
+        '200':
+          description: Day updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Day'
+        '400':
+          description: Bad request
+        '500':
+          description: An error occurred while trying to update the day
+components:
+  schemas:
+    Dia:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The MongoDB auto-generated id of the day.
+        fecha:
+          type: string
+          format: date
+          description: The date of the day.
+        tripulacion:
+          type: array
+          description: The crew assigned for the day.
+          items:
+            $ref: '#/components/schemas/CrewWorker'
+        feriado:
+          type: boolean
+          description: Indicates if the day is a holiday.
+        cod_remolcador:
+          type: string
+          description: The code of the tugboat associated with the day.
+        partes:
+          type: array
+          description: The records associated with the day.
+          items:
+            type: string
+            description: The code of the record. It is converted to a MongoDB ObjectId.
+      example:
+        _id: ObjectId('6913824hi3asdfge9182ye')
+        fecha: '2024-07-10'
+        partes: [
+          ObjectId('6913824hi3hre9182ad'),
+          ObjectId('6913824hi3hre943212kr')
+        ]
+        tripulacion: [
+          {
+            _id: ObjectId('6913824hi3vcx9182ye'),
+            tripulante: ObjectId('6913824hi3hre943212ye'),
+            cargo: 'Engrasador'
+          },
+          {
+            _id: ObjectId('6913824hi3hre9182ye'),
+            tripulante: ObjectId('6913824hi3hre9982ye'),
+            cargo: 'Maquinista'
+          }
+        ]
+        feriado: false
+        cod_remolcador: '1'
+    CrewWorker:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The MongoDB auto-generated id.
+        tripulante: 
+          type: string
+          description: A crew member code (cod_tripulante). Then, it is converted to a MongoDB ObjectId.
+        cargo:
+          type: string
+          description: The role of the crew member ('Maquinista', 'Engrasador', 'Marinero').
+  requestBodies:
+    NewDia:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              fecha:
+                required: true
+                type: string
+                format: date
+                description: The date of the day.
+              tripulacion:
+                type: array
+                description: The crew assigned for the day.
+                items:
+                  $ref: '#/components/schemas/CrewWorker'
+              feriado:
+                type: boolean
+                description: Indicates if the day is a holiday.
+              cod_remolcador:
+                required: true
+                type: string
+                description: The code of the tugboat associated with the day.
+            example:
+              fecha: '2024-07-10'
+              feriado: false
+              cod_remolcador: '1'

@@ -1,0 +1,88 @@
+paths:
+  /api/banderas:
+    post:
+      summary: It creates a new flag (country) and saves it into the database.
+      tags:
+        - Flags
+      responses:
+        "201":
+          description: The flag was successfully added to the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Flag'
+        "500":
+          description: An error occurred while trying to add the flag to the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewFlag'
+    get:
+      summary: It retrieves all the flags (countries) from the database.
+      tags:
+        - Flags
+      responses:
+        "200":
+          description: The flags were successfully retrieved from the database.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Flag'
+        "500":
+          description: An error occurred while trying to retrieve the flags from the database.
+  /api/banderas/{cod_bandera}:
+    get:
+      summary: It retrieves a flag (country) from the database by its code.
+      tags:
+        - Flags
+      parameters:
+        - in: path
+          name: cod_bandera
+          required: true
+          description: The code of the flag to retrieve.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The flag was successfully retrieved from the database.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flag'
+        "404":
+          description: The flag with the specified code was not found.
+        "500":
+          description: An error occurred while trying to retrieve the flag from the database.
+components:
+  schemas:
+    Flag:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The MongoDB auto-generated id of the flag.
+        cod_bandera:
+          type: string
+          description: The code of the flag.
+        title:
+          type: string
+          description: The name of the country.
+      example:
+        _id: ObjectId('6913824hi3hre9182ye')
+        cod_bandera: '1'
+        title: 'Argentina'
+  requestBodies:
+    NewFlag:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The name of the country.
+      example:
+        title: 'Argentina'

@@ -9,7 +9,3 @@ export const config = {
     DEVELOPMENT_DB_URL : process.env.DEVELOPMENT_DB_URL,
     PRIVATE_KEY : process.env.PRIVATE_KEY
 }
-
-console.log('Mode variable: ', config.MODE);
-console.log('Port variable: ', config.PORT);
-console.log('Mongo URL: ',  config.DEVELOPMENT_DB_URL);

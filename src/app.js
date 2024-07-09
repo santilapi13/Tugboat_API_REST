@@ -4,6 +4,12 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 
+import {fileURLToPath} from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 import { initializePassport } from './config/passport.config.js'
 import passport from 'passport';
 
@@ -19,7 +25,9 @@ import { TripulantesRouter } from './routes/tripulantes.router.js';
 import { UsersRouter } from './routes/users.router.js';
 import { SessionsRouter } from './routes/sessions.router.js';
 
-import { addLogger } from './utils/logger.js';
+import { addLogger } from './config/logger.config.js';
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express"
 
 const PORT = config.PORT;
 
@@ -34,6 +42,19 @@ const solicitantesRouter = new SolicitantesRouter();
 const tripulantesRouter = new TripulantesRouter();
 const usersRouter = new UsersRouter();
 const sessionsRouter = new SessionsRouter();
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: "Tugboat Management API - Santiago Lapiana",
+            description: "REST API for the management of tugboats, its crew, captains and recording their daily activities."
+        }
+    },
+    apis: [`${__dirname}/docs/**/*.yaml`]
+}
+
+const specs = swaggerJsdoc(swaggerOptions);
 
 const app = express();
 
@@ -61,6 +82,7 @@ app.use('/api/solicitantes', solicitantesRouter.getRouter());
 app.use('/api/tripulantes', tripulantesRouter.getRouter());
 app.use('/api/users', usersRouter.getRouter());
 app.use('/api/sessions', sessionsRouter.getRouter());
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 mongoose.connect(config.DEVELOPMENT_DB_URL)
     .then(() => {

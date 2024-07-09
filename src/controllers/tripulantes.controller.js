@@ -5,18 +5,25 @@ async function getTripulantes(req, res) {
         const tripulantes = await tripulantesService.getTripulantes();
         res.sendOk(tripulantes);
     } catch (error) {
-        res.sendBadRequestError(error.message);
+        req.logger.error(`Error fetching all crew members: ${error.message}`);
+        res.sendInternalServerError(error.message);
     }
 }
 
 async function getTripulanteByCode(req, res) {
-    const { cod_buque } = req.params;
+    const { cod_tripulante } = req.params;
+    let tripulante;
 
     try {
-        const tripulante = await tripulantesService.getTripulantes({ cod_buque });
+        tripulante = await tripulantesService.getTripulantes({ cod_tripulante });
+
+        if (!tripulante)
+            return res.sendBadRequestError(`Crew member with code ${cod_tripulante} not found.`);
+
         res.sendOk(tripulante);
     } catch (error) {
-        res.sendBadRequestError(error.message);
+        req.logger.error(`Error fetching crew member with code ${cod_tripulante}: ${error.message}`);
+        res.sendInternalServerError(error.message);
     }
 }
 
@@ -27,7 +34,8 @@ async function postTripulante(req, res) {
         const tripulante = await tripulantesService.createTripulante({ first_name, last_name });
         res.sendCreated(tripulante);
     } catch (error) {
-        res.sendBadRequestError(error.message);
+        req.logger.error(`Error creating crew member named ${first_name} ${last_name}: ${error.message}`);
+        res.sendInternalServerError(error.message);
     }
 }
 

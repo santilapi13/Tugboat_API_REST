@@ -5,18 +5,25 @@ async function getSolicitantes(req, res) {
         const solicitantes = await solicitantesService.getSolicitantes();
         res.sendOk(solicitantes);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        req.logger.error(`Error fetching all clients: ${error.message}`);
+        res.sendInternalServerError(error.message);
     }
 }
 
 async function getSolicitanteByCode(req, res) {
     const { cod_solicitante } = req.params;
+    let solicitante;
 
     try {
-        const solicitante = await solicitantesService.getSolicitantes({ cod_solicitante });
+        solicitante = await solicitantesService.getSolicitantes({ cod_solicitante });
+
+        if (!solicitante)
+            return res.sendBadRequestError(`Client with code ${cod_solicitante} not found.`);
+
         res.sendOk(solicitante);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        req.logger.error(`Error fetching client with code ${cod_solicitante}: ${error.message}`);
+        res.sendInternalServerError(error.message);
     }
 }
 
@@ -27,7 +34,8 @@ async function postSolicitante(req, res) {
         const solicitante = await solicitantesService.createSolicitante({ title });
         res.sendCreated(solicitante);
     } catch (error) {
-        res.sendBadRequest(error.message);
+        req.logger.error(`Error creating client named ${title}: ${error.message}`);
+        res.sendInternalServerError(error.message);
     }
 }
 

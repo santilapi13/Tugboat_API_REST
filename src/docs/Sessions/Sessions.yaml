@@ -1,0 +1,76 @@
+paths:
+  /api/sessions/signup:
+    post:
+      summary: Register a new user.
+      tags:
+        - Sessions
+      responses:
+        '200':
+          description: User registered successfully.
+        '400':
+          description: Invalid request body.
+        '500':
+          description: An error occurred while registering the user.
+  /api/sessions/login:
+    post:
+      summary: Login with username and password to obtain authentication token.
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The username for login.
+                password:
+                  type: string
+                  format: password
+                  description: The password for login.
+      responses:
+        '200':
+          description: Login successful. Returns authentication token and user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    description: The username of the logged-in user.
+                  role:
+                    type: string
+                    description: The role of the logged-in user
+                    enum:
+                      - ADMIN
+                      - CAPITAN
+                      - SUPERVISOR
+                      - CONTADOR
+                  maxAge:
+                    type: integer
+                    description: The maximum age of the authentication token (in milliseconds).
+        '400':
+          description: Invalid request body.
+        '500':
+          description: An error occurred while logging in.
+  /api/sessions/logout:
+    post:
+      summary: Logout the currently logged-in user.
+      tags:
+        - Sessions
+      responses:
+        '200':
+          description: Logout successful.
+      requestBody:
+        required: false
+        content:
+          application/json: {}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

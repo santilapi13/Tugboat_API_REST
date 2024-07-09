@@ -1,0 +1,85 @@
+paths:
+  /api/solicitantes:
+    get:
+      summary: Get all clients
+      tags:
+        - Clients
+      responses:
+        '200':
+          description: It retrieves all the clients from the database.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+        '500':
+          description: An error occurred while trying to retrieve the clients from the database.
+    post:
+      summary: Create a new client
+      tags:
+        - Clients
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewClient'
+      responses:
+        '201':
+          description: The client was successfully added to the database.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '500':
+          description: An error occurred while trying to add the client to the database.
+  /api/solicitantes/{cod_solicitante}:
+    get:
+      summary: Get an client by their code
+      tags:
+        - Clients
+      parameters:
+        - in: path
+          name: cod_solicitante
+          required: true
+          schema:
+            type: string
+          description: Client code
+      responses:
+        '200':
+          description: Client information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          description: Invalid client code
+        '500':
+          description: An error occurred while trying to retrieve the client from the database.
+components:
+  schemas:
+    Client:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The MongoDB auto-generated id of the client.
+        cod_solicitante:
+          type: string
+          description: The code of the client.
+        title:
+          type: string
+          description: The name of the client.
+      example:
+        _id: ObjectId('6913824hi3hre9182ye')
+        cod_solicitante: '1'
+        title: 'Solicitante1'
+  requestBodies:
+    NewClient:
+      type: object
+      properties:
+        title:
+          type: string
+      example:
+        title: 'Solicitante1'
