@@ -23,6 +23,7 @@ async function login(req, res, next) {
 
         res.sendOk(result);
     } catch (error) {
+        req.logger.error(`Error while logging in user ${req.user.username}: ${error.message}`);
         res.sendInternalServerError(error.message);
     }
 }

@@ -6,6 +6,7 @@ async function getUsers(req, res) {
     try {
         result = await usersService.getUsers();
     } catch (error) {
+        req.logger.error(`Error fetching all users: ${error.message}`);
         return res.sendInternalServerError(error.message);
     }
 
@@ -19,6 +20,7 @@ async function getUserById(req, res) {
     try {
         result = await usersService.getUsers({ uid });
     } catch (error) {
+        req.logger.error(`Error fetching user with ID ${uid}: ${error.message}`);
         return res.sendInternalServerError(error.message);
     }
 
@@ -37,12 +39,14 @@ async function deleteUser(req, res) {
         if (!user)
             return res.sendNotFoundError(`User with id ${uid} not found.`);
     } catch (error) {
+        req.logger.error(`Error fetching user with ID ${uid}: ${error.message}`);
         return res.sendInternalServerError(error.message);
     }
 
     try {
         result = await usersService.deleteUser(uid);
     } catch (error) {
+        req.logger.error(`Error deleting user with ID ${uid}: ${error.message}`);
         return res.sendInternalServerError(error.message);
     }
 

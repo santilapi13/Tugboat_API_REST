@@ -19,6 +19,8 @@ import { TripulantesRouter } from './routes/tripulantes.router.js';
 import { UsersRouter } from './routes/users.router.js';
 import { SessionsRouter } from './routes/sessions.router.js';
 
+import { addLogger } from './utils/logger.js';
+
 const PORT = config.PORT;
 
 const partesRouter = new PartesRouter();
@@ -40,8 +42,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 initializePassport();
 app.use(passport.initialize());
+app.use(addLogger);
 
-const allowedOrigins = ['https://administracion-puerto.vercel.app'];
+const allowedOrigins = ['https://administracion-puerto.vercel.app', 'http://localhost:5173'];
 app.use(cors({
     origin: allowedOrigins,
     credentials: true,

@@ -39,6 +39,7 @@ async function getPartes(req, res) {
     try {
         partes = await partesService.getPartes({ cod_remolcador, cod_buque, cod_solicitante, confirmado, facturado });
     } catch (error) {
+        req.logger.error(`Error fetching all dailys: ${error.message}`);
         return res.sendInternalServerError(error.message);
     }
 
@@ -85,6 +86,7 @@ async function postParte(req, res) {
 
         result = await parteCreationTransaction(dia, parte);
     } catch (error) {
+        req.logger.error(`Error posting new daily (${parte}): ${error.message}`);
         return res.sendInternalServerError(error.message);
     }
 
@@ -167,6 +169,7 @@ async function putParte(req, res) {
     try {
         result = await partesService.updateParte(cod_parte, parte);
     } catch (error) {
+        req.logger.error(`Error updating daily with code ${cod_parte}: ${error.message}`);
         return res.sendInternalServerError(error.message);
     }
 
