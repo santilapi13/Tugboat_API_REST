@@ -1,22 +1,20 @@
 import { partesService } from '../services/partes.service.js';
-import { remolcadoresService } from '../services/remolcadores.service.js';
-import { buquesService } from '../services/buques.service.js';
-import { solicitantesService } from '../services/solicitantes.service.js';
+import { remolcadoresService, buquesService, solicitantesService } from '../services/services.js';
 import { diasService } from '../services/dias.service.js';
 import ParteDTO from '../dao/dto/parte.dto.js';
 
 function validateQueryParams(remolcador, buque, solicitante, confirmado, facturado) {
     if (remolcador) {
-        remolcador = remolcadoresService.getRemolcadores({ cod_remolcador: remolcador });
+        remolcador = remolcadoresService.get({ cod_remolcador: remolcador });
         if (!remolcador) throw new Error("Remolcador not found.");
         remolcador = remolcador._id;
     }
 
-    buque = buquesService.getBuques({ cod_buque: buque });
+    buque = buquesService.get({ cod_buque: buque });
     if (!buque) throw new Error("Buque not found.");
     buque = buque._id;
 
-    solicitante = solicitantesService.getSolicitantes({ cod_solicitante: solicitante });
+    solicitante = solicitantesService.get({ cod_solicitante: solicitante });
     if (!solicitante) throw new Error("Solicitante not found.");
     solicitante = solicitante._id;
 

@@ -1,8 +1,4 @@
-import { remolcadoresService } from "../../services/remolcadores.service.js";
-import { buquesService } from "../../services/buques.service.js";
-import { maniobrasService } from "../../services/maniobras.service.js";
-import { solicitantesService } from "../../services/solicitantes.service.js";
-import { banderasService } from "../../services/banderas.service.js";
+import { remolcadoresService, buquesService, maniobrasService, solicitantesService, banderasService } from "../../services/services.js";
 
 export default class ParteDTO {
     constructor(parte) {
@@ -50,19 +46,19 @@ export default class ParteDTO {
     }
 
     async validatePropertiesValues() {
-        let remolcador = await remolcadoresService.getRemolcadores({ cod_remolcador: this.remolcador });
+        let remolcador = await remolcadoresService.get({ cod_remolcador: this.remolcador });
         if (!remolcador) throw new Error(`Couldn't update parte: remolcador with cod_remolcador ${this.remolcador} not found.`);
 
-        let buque = await buquesService.getBuques({ cod_buque: this.buque });
+        let buque = await buquesService.get({ cod_buque: this.buque });
         if (!buque) throw new Error(`Couldn't update parte: buque with cod_buque ${this.buque} not found.`);
 
-        let maniobra = await maniobrasService.getManiobras({ cod_maniobra: this.maniobra });
+        let maniobra = await maniobrasService.get({ cod_maniobra: this.maniobra });
         if (!maniobra) throw new Error(`Couldn't update parte: maniobra with cod_maniobra ${this.maniobra} not found.`);
 
-        let solicitante = await solicitantesService.getSolicitantes({ cod_solicitante: this.solicitante });
+        let solicitante = await solicitantesService.get({ cod_solicitante: this.solicitante });
         if (!solicitante) throw new Error(`Couldn't update parte: solicitante with cod_solicitante ${this.solicitante} not found.`);
 
-        let bandera = await banderasService.getBanderas({ cod_bandera: this.bandera });
+        let bandera = await banderasService.get({ cod_bandera: this.bandera });
         if (!bandera) throw new Error(`Couldn't update parte: bandera with cod_bandera ${this.bandera} not found.`);
     }
 }

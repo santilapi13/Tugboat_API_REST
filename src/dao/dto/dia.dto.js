@@ -1,6 +1,5 @@
-import { tripulantesService } from '../../services/tripulantes.service.js';
+import { tripulantesService, remolcadoresService } from '../../services/services.js';
 import { diasService } from '../../services/dias.service.js';
-import { remolcadoresService } from '../../services/remolcadores.service.js';
 
 export default class DiaDTO {
     constructor(dia) {
@@ -79,12 +78,12 @@ export default class DiaDTO {
     }
 
     validateReferences = async () => {
-        let existingRemolcador = await remolcadoresService.getRemolcadores({ cod_remolcador: this.cod_remolcador });
+        let existingRemolcador = await remolcadoresService.get({ cod_remolcador: this.cod_remolcador });
         if (!existingRemolcador[0]) throw new Error(`cod_remolcador ${this.cod_remolcador} not found.`);
 
         for (let i = 0; i < this.tripulacion.length; i++) {
             try {
-                let existingTripulante = await tripulantesService.getTripulantes({ cod_tripulante: this.tripulacion[i].tripulante });
+                let existingTripulante = await tripulantesService.get({ cod_tripulante: this.tripulacion[i].tripulante });
                 if (!existingTripulante[0]) throw new Error(`cod_tripulante ${this.tripulacion[i].tripulante} not found.`);
             } catch (error) {
                 throw new Error(`Dia properties are not valid: ${error}`);

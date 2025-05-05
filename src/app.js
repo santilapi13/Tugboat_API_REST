@@ -13,15 +13,9 @@ const __dirname = dirname(__filename);
 import { initializePassport } from './config/passport.config.js'
 import passport from 'passport';
 
+import { banderasRouter, buquesRouter, remolcadoresRouter, maniobrasRouter, tripulantesRouter, capitanesRouter, solicitantesRouter } from './routes/entitiesRouter.js';
 import { PartesRouter } from './routes/partes.router.js';
-import { BanderasRouter } from './routes/banderas.router.js';
-import { BuquesRouter } from './routes/buques.router.js';
-import { CapitanesRouter } from './routes/capitanes.router.js';
 import { DiasRouter } from './routes/dias.router.js';
-import { ManiobrasRouter } from './routes/maniobras.router.js';
-import { RemolcadoresRouter } from './routes/remolcadores.router.js';
-import { SolicitantesRouter } from './routes/solicitantes.router.js';
-import { TripulantesRouter } from './routes/tripulantes.router.js';
 import { UsersRouter } from './routes/users.router.js';
 import { SessionsRouter } from './routes/sessions.router.js';
 
@@ -32,14 +26,7 @@ import swaggerUiExpress from "swagger-ui-express"
 const PORT = config.PORT;
 
 const partesRouter = new PartesRouter();
-const banderasRouter = new BanderasRouter();
-const buquesRouter = new BuquesRouter();
-const capitanesRouter = new CapitanesRouter();
 const diasRouter = new DiasRouter();
-const maniobrasRouter = new ManiobrasRouter();
-const remolcadoresRouter = new RemolcadoresRouter();
-const solicitantesRouter = new SolicitantesRouter();
-const tripulantesRouter = new TripulantesRouter();
 const usersRouter = new UsersRouter();
 const sessionsRouter = new SessionsRouter();
 

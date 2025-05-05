@@ -5,7 +5,8 @@ import jwt from 'jsonwebtoken';
 const PRIVATE_KEY = config.PRIVATE_KEY;
 
 export default class Router {
-    constructor() {
+    constructor(controller) {
+        this.controller = controller;
         this.router = ExpressRouter();
         this.init();
     }
@@ -101,6 +102,10 @@ export default class Router {
 
     put(path, policies, ...callbacks) {
         this.router.put(path, this.generateCustomResponses, this.handlePolicies(policies), this.applyCallbacks(callbacks));
+    }
+
+    patch(path, policies, ...callbacks) {
+        this.router.patch(path, this.generateCustomResponses, this.handlePolicies(policies), this.applyCallbacks(callbacks));
     }
 
     delete(path, policies, ...callbacks) {
